@@ -43,6 +43,8 @@ export const getPublishedSite = async (): Promise<PublishedSite> => {
         tags: ["cms", "cms-home"],
         revalidate: 60,
       },
+      // Avoid hanging the Vercel build when the API is cold/unseeded.
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!res.ok) {

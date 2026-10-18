@@ -6,8 +6,10 @@ const nextConfig: NextConfig = {
   experimental: {
     agentFeedback: true,
   },
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Off for stable Vercel builds with /admin client routes.
+  // Public CMS still uses fetch tags + /api/revalidate.
+  // (partialPrefetching requires cacheComponents — keep both off together.)
+  cacheComponents: false,
   images: {
     remotePatterns: [
       {
