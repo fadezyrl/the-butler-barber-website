@@ -1,0 +1,160 @@
+{
+  "meta": {
+    "title": "ذا بتلر باربر | صالون حلاقة في القضيبية، المنامة — قصّات وفييد ولحية",
+    "description": "صالون حلاقة فاخر في القضيبية، المنامة. قصّات دقيقة، سكن فييد، تهذيب لحية وعناية كاملة من ٩ صباحاً حتى ١١:٣٠ مساءً. احجز عبر الهاتف أو واتساب.",
+    "ogTitle": "ذا بتلر باربر | حلاق في القضيبية، المنامة",
+    "ogDescription": "قصّات دقيقة وفييد حاد وتهذيب لحية في القضيبية، المنامة. مفتوح يومياً ٩:٠٠ ص – ١١:٣٠ م. اتصل +٩٧٣ ٣٥٤٨ ٢١٣١."
+  },
+  "brand": {
+    "name": "ذا بتلر باربر",
+    "wordmarkLead": "The Butler",
+    "wordmarkTrail": " Barber",
+    "homeAria": "ذا بتلر باربر، الصفحة الرئيسية"
+  },
+  "a11y": {
+    "skipToContent": "تخطّي إلى المحتوى",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة",
+    "mainNav": "التنقل الرئيسي",
+    "footerNav": "تذييل الصفحة",
+    "galleryTrack": "معرض الأعمال",
+    "prevImages": "الصور السابقة",
+    "nextImages": "الصور التالية",
+    "prevReview": "السابق",
+    "nextReview": "التالي",
+    "mapTitle": "خريطة تظهر ذا بتلر باربر، القضيبية، المنامة",
+    "whatsapp": "محادثة عبر واتساب"
+  },
+  "nav": {
+    "story": "قصتنا",
+    "services": "الخدمات",
+    "work": "أعمالنا",
+    "contact": "تواصل",
+    "book": "احجز موعداً"
+  },
+  "hero": {
+    "titleLead": "حِدّة بالحِرفة.",
+    "titleEm": "تميّز بالطبع.",
+    "sub": "قصّات دقيقة، فييد حاد وعناية مدروسة. اعثر على أسلوبك في ذا بتلر باربر بالقضيبية، المنامة.",
+    "exploreWork": "استكشف أعمالنا",
+    "meta": "القضيبية، المنامة، البحرين",
+    "openStrong": "مفتوح كل يوم",
+    "openRest": " من ٩:٠٠ صباحاً إلى ١١:٣٠ مساءً",
+    "addressLine": "طريق ٢١٥٣، مجمع ٣٢١، محل ٣٥٥٠",
+    "photoCaption": "صورة رئيسية: حلاق أثناء العمل، قص عمودي"
+  },
+  "story": {
+    "titleLead": "تراث في الحرفة.",
+    "titleEm": "حداثة في التفاصيل.",
+    "p1": "ذا بتلر باربر حيث تلتقي التقاليد بالاتجاهات الحديثة. نتخصص في قصّات الشعر الدقيقة، الفييد الحاد، تهذيب اللحية وتجارب العناية الكاملة، كل منها بما يناسب أسلوبك.",
+    "p2": "من قلب القضيبية، هدفنا بسيط: أن تبدو حاداً، أنيقاً وواثقاً.",
+    "lineLead": "حاد. أنيق. ",
+    "lineEm": "واثق.",
+    "photoCaption": "صورة القصة: المحل أو قصّة قيد التنفيذ"
+  },
+  "services": {
+    "titleLead": "",
+    "titleEm": "خدماتنا.",
+    "note": "أسعار واضحة بالدينار البحريني. شعر، لحية، لون، فيشل وعلاجات — كل خدمة بسعرها.",
+    "askPrice": "اسأل عن السعر",
+    "openNote": "مفتوح كل يوم، من ٩:٠٠ صباحاً إلى ١١:٣٠ مساءً.",
+    "categories": {
+      "hair": "خدمات الشعر",
+      "beard": "خدمات اللحية",
+      "colorFacial": "اللون والفيشل",
+      "waxTreatment": "الشمع وعلاجات الشعر"
+    },
+    "items": {
+      "classicCut": "Classic Cut",
+      "buzzCut": "Buzz Cut",
+      "fadeCut": "Fade Cut",
+      "skinFade": "Skin Fade",
+      "childrenCut": "Children Cut",
+      "headShave": "Head Shave",
+      "hairShampoo": "Hair Shampoo",
+      "beardTrim": "Beard Trim",
+      "cleanShave": "Clean Shave",
+      "beardStyling": "Beard Styling",
+      "hotTowelShave": "Hot Towel Shave",
+      "beardFadeStyle": "Beard Fade Style",
+      "hairBeardColor": "Hair & Beard Color",
+      "colorCorrection": "Color Correction",
+      "highlights": "Highlights",
+      "classicFacial": "Classic Facial",
+      "cleansingFacial": "Cleansing Facial",
+      "brighteningFacial": "Brightening Facial",
+      "specialFacial": "Special Facial",
+      "fullFaceWax": "Full Face Wax",
+      "noseEarWax": "Nose & Ear Wax",
+      "hairKeratin": "Hair Keratin",
+      "curlyHairPerm": "Curly Hair Perm",
+      "hairProtein": "Hair Protein"
+    }
+  },
+  "gallery": {
+    "title": "كل تفصيل مهم.",
+    "introLead": "قصّات وفييد ولمسات نهائية من الكرسي. تابعنا على ",
+    "introTrail": ".",
+    "instagram": "إنستغرام",
+    "scrollHint": "المزيد على إنستغرام",
+    "captions": [
+      "قصة منتهية من الكرسي",
+      "قصّ قيد التنفيذ في ذا بتلر باربر",
+      "لمسة تفصيل من الكرسي",
+      "عمل أسلوب في ذا بتلر باربر",
+      "فييد ولمسة نهائية من الكرسي",
+      "عمل من الكرسي في ذا بتلر باربر"
+    ]
+  },
+  "reviews": {
+    "eyebrow": "آراء العملاء",
+    "emptyQuote": "اسمع ممن يجلسون على الكرسي.",
+    "emptyBody": "اقرأ ما يقوله العملاء عن ذا بتلر باربر على Google.",
+    "readOnGoogle": "اقرأ التقييمات على Google",
+    "slideLabel": "شهادة {current} من {total}"
+  },
+  "contact": {
+    "title": "زورونا في القضيبية.",
+    "getDirections": "احصل على الاتجاهات",
+    "hoursTitle": "ساعات العمل",
+    "hoursNote": "الساعات كما زوّدها المحل. اتصل للتأكيد قبل مناسبة خاصة أو عطلة.",
+    "days": {
+      "Sat": "السبت",
+      "Sun": "الأحد",
+      "Mon": "الاثنين",
+      "Tue": "الثلاثاء",
+      "Wed": "الأربعاء",
+      "Thu": "الخميس",
+      "Fri": "الجمعة"
+    }
+  },
+  "cta": {
+    "title": "قصّتك التالية تبدأ هنا.",
+    "body": "اختر وقتاً يناسبك وسنجهّز الكرسي."
+  },
+  "map": {
+    "eyebrow": "الموقع",
+    "title": "تفضل بزيارة المحل.",
+    "openInMaps": "احصل على الاتجاهات",
+    "fallback": "تُحمَّل الخريطة عند الوصول إلى هذا القسم. إن لم تظهر، استخدم احصل على الاتجاهات.",
+    "pinLabel": "ذا بتلر باربر"
+  },
+  "footer": {
+    "statement": "قصّات دقيقة، فييد حاد ولمسة نهائية واثقة.",
+    "explore": "استكشف",
+    "visit": "الزيارة",
+    "reach": "تواصل معنا",
+    "rightsBrand": "ذا بتلر باربر.",
+    "developedBy": "تطوير",
+    "developerName": "Fadezy",
+    "rightsTrail": "جميع الحقوق محفوظة.",
+    "openEveryDay": "مفتوح كل يوم، من ٩:٠٠ صباحاً إلى ١١:٣٠ مساءً"
+  },
+  "lang": {
+    "en": "EN",
+    "ar": "AR",
+    "enFull": "English",
+    "arFull": "العربية",
+    "switchTo": "اللغة"
+  }
+}
