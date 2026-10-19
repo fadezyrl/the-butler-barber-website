@@ -112,7 +112,7 @@ export default function AdminTestimonialsPage(): React.JSX.Element {
             Add review
           </button>
           <button
-            className="admin-btn"
+            className="admin-btn admin-btn-save"
             type="button"
             onClick={onSaveAndPublish}
             disabled={form.loading}

@@ -32,6 +32,7 @@ export default function AdminDashboardLayout({
   const pathname = usePathname();
   const [admin, setAdmin] = useState<AdminUser | null>(null);
   const [ready, setReady] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
     const token = getAdminToken();
@@ -49,6 +50,24 @@ export default function AdminDashboardLayout({
       });
   }, [router]);
 
+  useEffect(() => {
+    setNavOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!navOpen) return;
+    const onKey = (event: KeyboardEvent): void => {
+      if (event.key === "Escape") setNavOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [navOpen]);
+
   const onLogout = async (): Promise<void> => {
     await adminLogout();
     router.replace("/admin/login");
@@ -62,10 +81,52 @@ export default function AdminDashboardLayout({
     );
   }
 
+  const pageTitle =
+    NAV.find((item) =>
+      item.exact
+        ? pathname === item.href
+        : pathname === item.href || pathname.startsWith(`${item.href}/`),
+    )?.label || "Admin";
+
   return (
-    <div className="admin-root">
+    <div className={`admin-root${navOpen ? " is-nav-open" : ""}`}>
       <div className="admin-shell">
-        <aside className="admin-sidebar">
+        <header className="admin-mobile-bar">
+          <button
+            type="button"
+            className="admin-menu-btn"
+            aria-expanded={navOpen}
+            aria-controls="admin-sidebar"
+            onClick={() => setNavOpen((open) => !open)}
+          >
+            <span className="admin-menu-icon" aria-hidden="true" />
+            <span className="admin-sr-only">
+              {navOpen ? "Close menu" : "Open menu"}
+            </span>
+          </button>
+          <div className="admin-mobile-bar-title">
+            <strong>The Butler Barber</strong>
+            <span>{pageTitle}</span>
+          </div>
+          <a
+            className="admin-mobile-view-site"
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Site
+          </a>
+        </header>
+
+        <button
+          type="button"
+          className="admin-nav-backdrop"
+          aria-label="Close menu"
+          tabIndex={navOpen ? 0 : -1}
+          onClick={() => setNavOpen(false)}
+        />
+
+        <aside className="admin-sidebar" id="admin-sidebar">
           <div className="admin-brand">
             <strong>The Butler Barber</strong>
             <span>Easy website editor</span>
@@ -81,6 +142,7 @@ export default function AdminDashboardLayout({
                   key={item.href}
                   href={item.href}
                   className={active ? "is-active" : undefined}
+                  onClick={() => setNavOpen(false)}
                 >
                   {item.label}
                 </Link>
@@ -88,7 +150,10 @@ export default function AdminDashboardLayout({
             })}
           </nav>
           <div className="admin-sidebar-foot">
-            <span className="admin-muted" style={{ color: "rgba(245,245,244,0.55)" }}>
+            <span
+              className="admin-muted"
+              style={{ color: "rgba(245,245,244,0.55)" }}
+            >
               {admin?.email}
             </span>
             <a href="/" target="_blank" rel="noopener noreferrer">

@@ -257,7 +257,11 @@ export default function AdminLocalesPage(): React.JSX.Element {
         ))}
 
         <div className="admin-actions">
-          <button type="submit" className="admin-btn" disabled={form.loading}>
+          <button
+            type="submit"
+            className="admin-btn admin-btn-save"
+            disabled={form.loading}
+          >
             {form.loading ? "Saving…" : "Save & publish"}
           </button>
         </div>

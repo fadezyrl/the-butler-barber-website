@@ -111,7 +111,7 @@ export default function AdminHoursPage(): React.JSX.Element {
         </div>
         <div className="admin-actions">
           <button
-            className="admin-btn"
+            className="admin-btn admin-btn-save"
             type="submit"
             form="hours-form"
             disabled={form.loading}

@@ -120,7 +120,7 @@ export default function AdminHeroStoryPage(): React.JSX.Element {
             <option value="ar">Arabic</option>
           </select>
           <button
-            className="admin-btn"
+            className="admin-btn admin-btn-save"
             type="submit"
             form="hero-story-form"
             disabled={form.loading}

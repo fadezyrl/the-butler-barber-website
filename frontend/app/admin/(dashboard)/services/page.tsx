@@ -171,7 +171,7 @@ export default function AdminServicesPage(): React.JSX.Element {
             Add category
           </button>
           <button
-            className="admin-btn"
+            className="admin-btn admin-btn-save"
             type="button"
             onClick={onSaveAndPublish}
             disabled={form.loading}

@@ -124,7 +124,7 @@ export default function AdminSettingsPage(): React.JSX.Element {
         </div>
         <div className="admin-actions">
           <button
-            className="admin-btn"
+            className="admin-btn admin-btn-save"
             type="submit"
             form="settings-form"
             disabled={form.loading}

@@ -162,7 +162,7 @@ export default function AdminGalleryPage(): React.JSX.Element {
             Add from link (optional)
           </button>
           <button
-            className="admin-btn"
+            className="admin-btn admin-btn-save"
             type="button"
             onClick={onSaveAndPublish}
             disabled={form.loading}
