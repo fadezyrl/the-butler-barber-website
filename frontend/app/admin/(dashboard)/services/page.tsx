@@ -71,8 +71,9 @@ export default function AdminServicesPage(): React.JSX.Element {
         nameEn: cat.draft_name_en,
         nameAr: cat.draft_name_ar,
       });
+      await publishSection("services");
       await reload();
-    }, "Category saved.");
+    }, "Saved and published to the live site.");
   };
 
   const addCategory = async (): Promise<void> => {
@@ -111,8 +112,9 @@ export default function AdminServicesPage(): React.JSX.Element {
         nameEn: item.draft_name_en,
         nameAr: item.draft_name_ar,
       });
+      await publishSection("services");
       await reload();
-    }, "Service item saved.");
+    }, "Saved and published to the live site.");
   };
 
   const addItem = async (categoryId: string): Promise<void> => {
@@ -141,8 +143,11 @@ export default function AdminServicesPage(): React.JSX.Element {
     }, "Service item deleted.");
   };
 
-  const onPublish = async (): Promise<void> => {
-    await form.run(() => publishSection("services"), "Services published.");
+  const onSaveAndPublish = async (): Promise<void> => {
+    await form.run(
+      () => publishSection("services"),
+      "Saved and published to the live site.",
+    );
   };
 
   if (booting) {
@@ -168,10 +173,10 @@ export default function AdminServicesPage(): React.JSX.Element {
           <button
             className="admin-btn"
             type="button"
-            onClick={onPublish}
+            onClick={onSaveAndPublish}
             disabled={form.loading}
           >
-            Publish services
+            Save & publish
           </button>
         </div>
       </div>
@@ -182,7 +187,7 @@ export default function AdminServicesPage(): React.JSX.Element {
           "Find the service in the list below.",
           "Edit the English / Arabic name if needed.",
           "Change the price (example: 2.500 BD).",
-          "Click Save on that row, then Publish services.",
+          "Click Save on that row — it goes live immediately.",
         ]}
       >
         <p>{HOW_TO_PUBLISH}</p>

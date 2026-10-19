@@ -21,4 +21,25 @@ export const mediaHint = (
 };
 
 export const HOW_TO_PUBLISH =
-  "After you edit, click Save draft. When ready for the live website, click Save & publish (or go to Publish). Visitors only see published changes.";
+  "After you edit, click Save & publish. The live website updates — no separate publish step.";
+
+const VIDEO_EXT_RE = /\.(mp4|webm|mov|ogg|m4v)(\?|#|$)/i;
+
+export const isVideoUrl = (url: string | null | undefined): boolean =>
+  Boolean(url && VIDEO_EXT_RE.test(url));
+
+export const isVideoMime = (mime: string | null | undefined): boolean =>
+  Boolean(mime && mime.toLowerCase().startsWith("video/"));
+
+export const detectMediaKind = (input: {
+  url?: string | null;
+  mime?: string | null;
+  kind?: "image" | "video" | null;
+  fileName?: string | null;
+  fileType?: string | null;
+}): "image" | "video" => {
+  if (input.kind === "video") return "video";
+  if (isVideoMime(input.mime) || isVideoMime(input.fileType)) return "video";
+  if (isVideoUrl(input.url) || isVideoUrl(input.fileName)) return "video";
+  return "image";
+};

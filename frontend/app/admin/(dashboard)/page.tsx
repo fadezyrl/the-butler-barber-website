@@ -40,11 +40,6 @@ const QUICK = [
     title: "Opening hours",
     blurb: "Open / closed times for each day",
   },
-  {
-    href: "/admin/publish",
-    title: "Publish to live site",
-    blurb: "Make your saved changes public",
-  },
 ] as const;
 
 export default function AdminOverviewPage(): React.JSX.Element {
@@ -78,11 +73,6 @@ export default function AdminOverviewPage(): React.JSX.Element {
             Change website text, photos and videos here. No coding needed.
           </p>
         </div>
-        <div className="admin-actions">
-          <Link className="admin-btn" href="/admin/publish">
-            Publish to live site
-          </Link>
-        </div>
       </div>
 
       <AdminGuide
@@ -90,8 +80,7 @@ export default function AdminOverviewPage(): React.JSX.Element {
         steps={[
           "Open the section you want to change (buttons below).",
           "Edit text or upload a new photo / video.",
-          "Click Save draft.",
-          "When ready, click Publish so the live website updates.",
+          "Click Save & publish — the live website updates.",
         ]}
       >
         <p>{HOW_TO_PUBLISH}</p>

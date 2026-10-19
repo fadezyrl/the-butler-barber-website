@@ -6,13 +6,18 @@ import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { useAdminForm } from "@/components/admin/useAdminForm";
 import { deleteMedia, listMedia, uploadMedia } from "@/lib/admin-api";
-import { MEDIA_LIMITS, mediaHint } from "@/lib/admin-media-guide";
+import {
+  MEDIA_LIMITS,
+  detectMediaKind,
+  mediaHint,
+} from "@/lib/admin-media-guide";
 import type { MediaAsset } from "@/types/cms";
 
 export default function AdminMediaPage(): React.JSX.Element {
   const [assets, setAssets] = useState<MediaAsset[]>([]);
   const [booting, setBooting] = useState(true);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewIsVideo, setPreviewIsVideo] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const form = useAdminForm();
 
@@ -51,6 +56,9 @@ export default function AdminMediaPage(): React.JSX.Element {
       return;
     }
 
+    setPreviewIsVideo(
+      detectMediaKind({ fileName: file.name, fileType: file.type }) === "video",
+    );
     setPreviewUrl(URL.createObjectURL(file));
     await form.run(async () => {
       await uploadMedia(file, file.name);
@@ -122,8 +130,22 @@ export default function AdminMediaPage(): React.JSX.Element {
       {previewUrl ? (
         <div className="admin-card">
           <h2>Just uploaded (preview)</h2>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="admin-preview" src={previewUrl} alt="Upload preview" />
+          {previewIsVideo ? (
+            <video
+              className="admin-preview"
+              src={previewUrl}
+              controls
+              playsInline
+              muted
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              className="admin-preview"
+              src={previewUrl}
+              alt="Upload preview"
+            />
+          )}
         </div>
       ) : null}
 
@@ -135,11 +157,15 @@ export default function AdminMediaPage(): React.JSX.Element {
         <div className="admin-media-grid">
           {assets.map((asset) => {
             const url = asset.url || asset.public_url || "";
-            const isVideo = (asset.mime || "").startsWith("video");
+            const isVideo =
+              detectMediaKind({
+                url,
+                mime: asset.mime || asset.mime_type,
+              }) === "video";
             return (
               <div className="admin-media-card" key={asset.id}>
                 {isVideo ? (
-                  <video src={url} muted playsInline />
+                  <video src={url} controls muted playsInline preload="metadata" />
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={url} alt={asset.alt || ""} />

@@ -84,16 +84,8 @@ export default function AdminHeroStoryPage(): React.JSX.Element {
     });
   };
 
-  const onSave = async (event: FormEvent): Promise<void> => {
+  const onSaveAndPublish = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
-    if (!drafts) return;
-    await form.run(
-      () => saveLocaleDraft(locale, drafts[locale] as unknown as Record<string, unknown>),
-      `${locale.toUpperCase()} hero/story draft saved.`,
-    );
-  };
-
-  const onPublish = async (): Promise<void> => {
     if (!drafts) return;
     await form.run(async () => {
       await saveLocaleDraft(
@@ -101,7 +93,7 @@ export default function AdminHeroStoryPage(): React.JSX.Element {
         drafts[locale] as unknown as Record<string, unknown>,
       );
       await publishSection("locales");
-    }, "Locales published.");
+    }, "Saved and published to the live site.");
   };
 
   if (booting || !current) {
@@ -128,20 +120,12 @@ export default function AdminHeroStoryPage(): React.JSX.Element {
             <option value="ar">Arabic</option>
           </select>
           <button
-            className="admin-btn admin-btn-secondary"
-            type="button"
-            disabled={form.loading}
-            onClick={onPublish}
-          >
-            Save & publish
-          </button>
-          <button
             className="admin-btn"
             type="submit"
             form="hero-story-form"
             disabled={form.loading}
           >
-            {form.loading ? "Saving…" : "Save draft"}
+            {form.loading ? "Saving…" : "Save & publish"}
           </button>
         </div>
       </div>
@@ -151,7 +135,7 @@ export default function AdminHeroStoryPage(): React.JSX.Element {
         steps={[
           "Choose English or Arabic from the dropdown.",
           "Change any box — keep sentences clear and short.",
-          "Save draft, then Save & publish for the live site.",
+          "Click Save & publish — the live site updates.",
           "To change the hero video/photo, go to Logo & contact.",
         ]}
       >
@@ -161,7 +145,7 @@ export default function AdminHeroStoryPage(): React.JSX.Element {
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />
 
-      <form id="hero-story-form" onSubmit={onSave}>
+      <form id="hero-story-form" onSubmit={onSaveAndPublish}>
         {(Object.keys(SECTION_FIELDS) as SectionKey[]).map((section) => (
           <div className="admin-card" key={section}>
             <h2>{section}</h2>

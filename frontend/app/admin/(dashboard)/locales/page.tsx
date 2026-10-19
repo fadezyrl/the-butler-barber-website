@@ -148,20 +148,8 @@ export default function AdminLocalesPage(): React.JSX.Element {
     });
   };
 
-  const onSave = async (event: FormEvent): Promise<void> => {
+  const onSaveAndPublish = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
-    if (!drafts) return;
-    await form.run(
-      () =>
-        saveLocaleDraft(
-          locale,
-          drafts[locale] as unknown as Record<string, unknown>,
-        ),
-      `${locale.toUpperCase()} copy draft saved.`,
-    );
-  };
-
-  const onPublish = async (): Promise<void> => {
     if (!drafts) return;
     await form.run(async () => {
       await saveLocaleDraft(
@@ -169,7 +157,7 @@ export default function AdminLocalesPage(): React.JSX.Element {
         drafts[locale] as unknown as Record<string, unknown>,
       );
       return publishSection("locales");
-    }, "Locale copy published. Site cache revalidated.");
+    }, "Saved and published to the live site.");
   };
 
   if (booting || !current) {
@@ -214,7 +202,7 @@ export default function AdminLocalesPage(): React.JSX.Element {
         steps={[
           "Switch English / Arabic with the buttons above.",
           "Only change the words you need — leave the rest.",
-          "Save draft, then Publish copy for the live site.",
+          "Click Save & publish — the live site updates.",
         ]}
       >
         <p>{HOW_TO_PUBLISH}</p>
@@ -223,7 +211,7 @@ export default function AdminLocalesPage(): React.JSX.Element {
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />
 
-      <form onSubmit={onSave}>
+      <form onSubmit={onSaveAndPublish}>
         {GROUPS.map((group) => (
           <section className="admin-card" key={group.key}>
             <h2>{group.label}</h2>
@@ -270,15 +258,7 @@ export default function AdminLocalesPage(): React.JSX.Element {
 
         <div className="admin-actions">
           <button type="submit" className="admin-btn" disabled={form.loading}>
-            {form.loading ? "Saving…" : "Save draft"}
-          </button>
-          <button
-            type="button"
-            className="admin-btn admin-btn-secondary"
-            disabled={form.loading}
-            onClick={onPublish}
-          >
-            Publish copy
+            {form.loading ? "Saving…" : "Save & publish"}
           </button>
         </div>
       </form>

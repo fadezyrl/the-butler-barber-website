@@ -19,7 +19,6 @@ const NAV: Array<{ href: string; label: string; exact?: boolean }> = [
   { href: "/admin/hours", label: "Opening hours" },
   { href: "/admin/locales", label: "Other website text" },
   { href: "/admin/media", label: "All uploads" },
-  { href: "/admin/publish", label: "Publish live" },
 ];
 
 type DashboardLayoutProps = {

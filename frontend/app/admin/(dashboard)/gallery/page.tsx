@@ -13,7 +13,12 @@ import {
   uploadMedia,
   upsertGalleryItem,
 } from "@/lib/admin-api";
-import { HOW_TO_PUBLISH, MEDIA_LIMITS, mediaHint } from "@/lib/admin-media-guide";
+import {
+  HOW_TO_PUBLISH,
+  MEDIA_LIMITS,
+  detectMediaKind,
+  mediaHint,
+} from "@/lib/admin-media-guide";
 
 type GalleryRow = {
   id: string;
@@ -30,6 +35,7 @@ export default function AdminGalleryPage(): React.JSX.Element {
   const [items, setItems] = useState<GalleryRow[]>([]);
   const [booting, setBooting] = useState(true);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewIsVideo, setPreviewIsVideo] = useState(false);
   const form = useAdminForm();
 
   const reload = useCallback(async (): Promise<void> => {
@@ -61,8 +67,9 @@ export default function AdminGalleryPage(): React.JSX.Element {
         sortOrder: item.draft_sort_order,
         isVisible: item.draft_is_visible,
       });
+      await publishSection("gallery");
       await reload();
-    }, "Gallery item saved.");
+    }, "Saved and published to the live site.");
   };
 
   const addFromUpload = async (
@@ -70,12 +77,17 @@ export default function AdminGalleryPage(): React.JSX.Element {
   ): Promise<void> => {
     const file = event.target.files?.[0];
     if (!file) return;
+    const kind = detectMediaKind({
+      fileName: file.name,
+      fileType: file.type,
+    });
+    setPreviewIsVideo(kind === "video");
     setPreviewUrl(URL.createObjectURL(file));
     await form.run(async () => {
       const asset = await uploadMedia(file, file.name);
       await upsertGalleryItem({
         mediaUrl: asset.url,
-        kind: file.type.startsWith("video") ? "video" : "image",
+        kind,
         altEn: file.name,
         altAr: file.name,
         sortOrder: items.length,
@@ -110,8 +122,11 @@ export default function AdminGalleryPage(): React.JSX.Element {
     }, "Gallery item deleted.");
   };
 
-  const onPublish = async (): Promise<void> => {
-    await form.run(() => publishSection("gallery"), "Gallery published.");
+  const onSaveAndPublish = async (): Promise<void> => {
+    await form.run(
+      () => publishSection("gallery"),
+      "Saved and published to the live site.",
+    );
   };
 
   if (booting) {
@@ -149,10 +164,10 @@ export default function AdminGalleryPage(): React.JSX.Element {
           <button
             className="admin-btn"
             type="button"
-            onClick={onPublish}
+            onClick={onSaveAndPublish}
             disabled={form.loading}
           >
-            Publish gallery
+            Save & publish
           </button>
         </div>
       </div>
@@ -162,8 +177,7 @@ export default function AdminGalleryPage(): React.JSX.Element {
         steps={[
           "Click “Add photo / video” and pick a file from your computer.",
           "Write a short English (and Arabic if you want) description.",
-          "Click Save on that item.",
-          "When finished, click Publish gallery.",
+          "Click Save on that item — it goes live immediately.",
         ]}
       >
         <p>{mediaHint("both")}</p>
@@ -176,8 +190,22 @@ export default function AdminGalleryPage(): React.JSX.Element {
       {previewUrl ? (
         <div className="admin-card">
           <h2>Upload preview</h2>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="admin-preview" src={previewUrl} alt="Upload preview" />
+          {previewIsVideo ? (
+            <video
+              className="admin-preview"
+              src={previewUrl}
+              controls
+              playsInline
+              muted
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              className="admin-preview"
+              src={previewUrl}
+              alt="Upload preview"
+            />
+          )}
         </div>
       ) : null}
 

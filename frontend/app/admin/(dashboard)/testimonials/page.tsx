@@ -57,8 +57,9 @@ export default function AdminTestimonialsPage(): React.JSX.Element {
         sortOrder: item.draft_sort_order,
         isVisible: item.draft_is_visible,
       });
+      await publishSection("testimonials");
       await reload();
-    }, "Testimonial saved.");
+    }, "Saved and published to the live site.");
   };
 
   const addItem = async (): Promise<void> => {
@@ -83,10 +84,10 @@ export default function AdminTestimonialsPage(): React.JSX.Element {
     }, "Testimonial deleted.");
   };
 
-  const onPublish = async (): Promise<void> => {
+  const onSaveAndPublish = async (): Promise<void> => {
     await form.run(
       () => publishSection("testimonials"),
-      "Testimonials published.",
+      "Saved and published to the live site.",
     );
   };
 
@@ -113,10 +114,10 @@ export default function AdminTestimonialsPage(): React.JSX.Element {
           <button
             className="admin-btn"
             type="button"
-            onClick={onPublish}
+            onClick={onSaveAndPublish}
             disabled={form.loading}
           >
-            Publish reviews
+            Save & publish
           </button>
         </div>
       </div>
@@ -126,7 +127,7 @@ export default function AdminTestimonialsPage(): React.JSX.Element {
         steps={[
           "Click Add review.",
           "Enter the customer name, quote (English / Arabic), and source (e.g. Google Review).",
-          "Save that card, then Publish reviews.",
+          "Click Save on that card — it goes live immediately.",
         ]}
       >
         <p>{HOW_TO_PUBLISH}</p>

@@ -2,7 +2,11 @@
 
 import { useId, useState } from "react";
 
-import { MEDIA_LIMITS, mediaHint } from "@/lib/admin-media-guide";
+import {
+  MEDIA_LIMITS,
+  detectMediaKind,
+  mediaHint,
+} from "@/lib/admin-media-guide";
 import { uploadMedia } from "@/lib/admin-api";
 
 type MediaUploadFieldProps = {
@@ -72,11 +76,14 @@ export const MediaUploadField = ({
       if (!url) {
         throw new Error("Upload worked but no file link came back. Try again.");
       }
+      const detected = detectMediaKind({
+        url,
+        fileName: file.name,
+        fileType: file.type,
+      });
       onChange(url);
-      if (onKindDetect) {
-        onKindDetect(file.type.startsWith("video") ? "video" : "image");
-      }
-      onSuccess?.("Upload complete — remember to Save, then Publish.");
+      onKindDetect?.(detected);
+      onSuccess?.("Upload complete — click Save & publish to update the live site.");
     } catch (err) {
       onError?.(
         err instanceof Error
@@ -90,8 +97,7 @@ export const MediaUploadField = ({
   };
 
   const isVideo =
-    kind === "video" ||
-    (!kind && /\.(mp4|webm|mov|ogg)(\?|$)/i.test(value));
+    detectMediaKind({ url: value, kind }) === "video";
 
   return (
     <div className="admin-field admin-media-upload-field">

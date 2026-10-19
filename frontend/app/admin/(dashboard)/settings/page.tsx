@@ -93,33 +93,19 @@ export default function AdminSettingsPage(): React.JSX.Element {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const onSave = async (event: FormEvent): Promise<void> => {
+  const onSaveAndPublish = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
-    const payload = {
-      ...settings,
-      seoKeywords: keywordsText
-        .split(",")
-        .map((k) => k.trim())
-        .filter(Boolean),
-    };
-    await form.run(() => saveSettingsDraft(payload), "Settings draft saved.");
-  };
-
-  const onPublish = async (): Promise<void> => {
-    await form.run(
-      async () => {
-        const payload = {
-          ...settings,
-          seoKeywords: keywordsText
-            .split(",")
-            .map((k) => k.trim())
-            .filter(Boolean),
-        };
-        await saveSettingsDraft(payload);
-        await publishSection("settings");
-      },
-      "Settings published.",
-    );
+    await form.run(async () => {
+      const payload = {
+        ...settings,
+        seoKeywords: keywordsText
+          .split(",")
+          .map((k) => k.trim())
+          .filter(Boolean),
+      };
+      await saveSettingsDraft(payload);
+      await publishSection("settings");
+    }, "Saved and published to the live site.");
   };
 
   if (booting) {
@@ -138,20 +124,12 @@ export default function AdminSettingsPage(): React.JSX.Element {
         </div>
         <div className="admin-actions">
           <button
-            className="admin-btn admin-btn-secondary"
-            type="button"
-            disabled={form.loading}
-            onClick={onPublish}
-          >
-            Save & publish
-          </button>
-          <button
             className="admin-btn"
             type="submit"
             form="settings-form"
             disabled={form.loading}
           >
-            {form.loading ? "Saving…" : "Save draft"}
+            {form.loading ? "Saving…" : "Save & publish"}
           </button>
         </div>
       </div>
@@ -162,7 +140,7 @@ export default function AdminSettingsPage(): React.JSX.Element {
           "Update phone / WhatsApp / Instagram links if they change.",
           "Upload a new logo (PNG or JPG recommended).",
           "Replace hero, story or CTA media with Upload buttons below.",
-          "Save draft, then Save & publish for the live site.",
+          "Click Save & publish — the live site updates.",
         ]}
       >
         <p>{mediaHint("both")}</p>
@@ -172,7 +150,7 @@ export default function AdminSettingsPage(): React.JSX.Element {
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />
 
-      <form id="settings-form" onSubmit={onSave}>
+      <form id="settings-form" onSubmit={onSaveAndPublish}>
         <div className="admin-card">
           <h2>Logo & contact details</h2>
           <div className="admin-grid admin-grid-2">

@@ -82,24 +82,8 @@ export default function AdminHoursPage(): React.JSX.Element {
     );
   };
 
-  const onSave = async (event: FormEvent): Promise<void> => {
+  const onSaveAndPublish = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
-    await form.run(
-      () =>
-        saveHoursDraft(
-          days.map((d) => ({
-            day: d.day,
-            isClosed: d.isClosed,
-            opens: d.opens,
-            closes: d.closes,
-            displayOverride: d.displayOverride || null,
-          })),
-        ),
-      "Hours draft saved.",
-    );
-  };
-
-  const onPublish = async (): Promise<void> => {
     await form.run(async () => {
       await saveHoursDraft(
         days.map((d) => ({
@@ -111,7 +95,7 @@ export default function AdminHoursPage(): React.JSX.Element {
         })),
       );
       await publishSection("hours");
-    }, "Hours published.");
+    }, "Saved and published to the live site.");
   };
 
   if (booting) {
@@ -127,20 +111,12 @@ export default function AdminHoursPage(): React.JSX.Element {
         </div>
         <div className="admin-actions">
           <button
-            className="admin-btn admin-btn-secondary"
-            type="button"
-            disabled={form.loading}
-            onClick={onPublish}
-          >
-            Save & publish
-          </button>
-          <button
             className="admin-btn"
             type="submit"
             form="hours-form"
             disabled={form.loading}
           >
-            {form.loading ? "Saving…" : "Save draft"}
+            {form.loading ? "Saving…" : "Save & publish"}
           </button>
         </div>
       </div>
@@ -151,7 +127,7 @@ export default function AdminHoursPage(): React.JSX.Element {
           "Use 24-hour time like 09:00 and 23:30.",
           "Tick Closed if the shop is shut that day.",
           "Optional display text can override what visitors see (e.g. 9 AM – 11:30 PM).",
-          "Save & publish when done.",
+          "Click Save & publish when done.",
         ]}
       >
         <p>{HOW_TO_PUBLISH}</p>
@@ -160,7 +136,7 @@ export default function AdminHoursPage(): React.JSX.Element {
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />
 
-      <form id="hours-form" onSubmit={onSave}>
+      <form id="hours-form" onSubmit={onSaveAndPublish}>
         <div className="admin-list">
           {days.map((day) => (
             <div className="admin-item" key={day.day}>
