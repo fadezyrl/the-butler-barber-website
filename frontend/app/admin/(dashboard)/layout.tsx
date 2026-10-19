@@ -10,16 +10,16 @@ import type { AdminUser } from "@/types/cms";
 import "../admin.css";
 
 const NAV: Array<{ href: string; label: string; exact?: boolean }> = [
-  { href: "/admin", label: "Overview", exact: true },
-  { href: "/admin/settings", label: "Settings" },
-  { href: "/admin/hero-story", label: "Hero & Story" },
-  { href: "/admin/services", label: "Services" },
+  { href: "/admin", label: "Home", exact: true },
+  { href: "/admin/settings", label: "Logo & contact" },
+  { href: "/admin/hero-story", label: "Homepage text" },
+  { href: "/admin/services", label: "Services & prices" },
   { href: "/admin/gallery", label: "Gallery" },
-  { href: "/admin/testimonials", label: "Testimonials" },
-  { href: "/admin/hours", label: "Hours" },
-  { href: "/admin/locales", label: "Site copy" },
-  { href: "/admin/media", label: "Media" },
-  { href: "/admin/publish", label: "Publish" },
+  { href: "/admin/testimonials", label: "Reviews" },
+  { href: "/admin/hours", label: "Opening hours" },
+  { href: "/admin/locales", label: "Other website text" },
+  { href: "/admin/media", label: "All uploads" },
+  { href: "/admin/publish", label: "Publish live" },
 ];
 
 type DashboardLayoutProps = {
@@ -69,7 +69,7 @@ export default function AdminDashboardLayout({
         <aside className="admin-sidebar">
           <div className="admin-brand">
             <strong>The Butler Barber</strong>
-            <span>Content management</span>
+            <span>Easy website editor</span>
           </div>
           <nav className="admin-nav" aria-label="Admin">
             {NAV.map((item) => {

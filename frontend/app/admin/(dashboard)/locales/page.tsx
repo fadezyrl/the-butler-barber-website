@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 
+import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { useAdminForm } from "@/components/admin/useAdminForm";
 import type { Dictionary, Locale } from "@/data/dictionary";
@@ -10,6 +11,7 @@ import {
   publishSection,
   saveLocaleDraft,
 } from "@/lib/admin-api";
+import { HOW_TO_PUBLISH } from "@/lib/admin-media-guide";
 
 type GroupKey =
   | "meta"
@@ -178,10 +180,11 @@ export default function AdminLocalesPage(): React.JSX.Element {
     <div>
       <header className="admin-header">
         <div>
-          <h1>Site copy</h1>
+          <h1>Other website text</h1>
           <p>
-            Edit navigation, footer, SEO text and other labels. Hero, story and
-            CTA are under Hero & Story. Service names are under Services.
+            Menu labels, footer, contact headings, SEO title, and similar small
+            texts. Homepage hero text is under Homepage text. Prices are under
+            Services & prices.
           </p>
         </div>
         <div className="admin-actions">
@@ -205,6 +208,17 @@ export default function AdminLocalesPage(): React.JSX.Element {
           </button>
         </div>
       </header>
+
+      <AdminGuide
+        title="Tips"
+        steps={[
+          "Switch English / Arabic with the buttons above.",
+          "Only change the words you need — leave the rest.",
+          "Save draft, then Publish copy for the live site.",
+        ]}
+      >
+        <p>{HOW_TO_PUBLISH}</p>
+      </AdminGuide>
 
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />

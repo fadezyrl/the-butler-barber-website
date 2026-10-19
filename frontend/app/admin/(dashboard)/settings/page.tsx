@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 
+import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { MediaUploadField } from "@/components/admin/MediaUploadField";
 import { useAdminForm } from "@/components/admin/useAdminForm";
@@ -10,7 +11,14 @@ import {
   publishSection,
   saveSettingsDraft,
 } from "@/lib/admin-api";
+import { HOW_TO_PUBLISH, mediaHint } from "@/lib/admin-media-guide";
 import type { CmsSiteSettings } from "@/types/cms";
+
+const SLOT_LABELS: Record<"hero" | "story" | "cta", string> = {
+  hero: "Hero (top of homepage)",
+  story: "Our Story section",
+  cta: "Booking / CTA section",
+};
 
 const emptySettings = (): CmsSiteSettings => ({
   logoSrc: "",
@@ -122,8 +130,11 @@ export default function AdminSettingsPage(): React.JSX.Element {
     <>
       <div className="admin-header">
         <div>
-          <h1>Settings</h1>
-          <p>Brand, contact, maps, SEO, and media slots.</p>
+          <h1>Logo & contact</h1>
+          <p>
+            Shop phone, WhatsApp, address, logo, and main homepage photos /
+            videos.
+          </p>
         </div>
         <div className="admin-actions">
           <button
@@ -145,18 +156,32 @@ export default function AdminSettingsPage(): React.JSX.Element {
         </div>
       </div>
 
+      <AdminGuide
+        title="On this page"
+        steps={[
+          "Update phone / WhatsApp / Instagram links if they change.",
+          "Upload a new logo (PNG or JPG recommended).",
+          "Replace hero, story or CTA media with Upload buttons below.",
+          "Save draft, then Save & publish for the live site.",
+        ]}
+      >
+        <p>{mediaHint("both")}</p>
+        <p>{HOW_TO_PUBLISH}</p>
+      </AdminGuide>
+
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />
 
       <form id="settings-form" onSubmit={onSave}>
         <div className="admin-card">
-          <h2>Brand & contact</h2>
+          <h2>Logo & contact details</h2>
           <div className="admin-grid admin-grid-2">
             <MediaUploadField
               id="logoSrc"
-              label="Logo"
+              label="Shop logo"
               value={settings.logoSrc}
-              accept="image/*"
+              mode="image"
+              hint="Logo image only (PNG or JPG works best). Transparent PNG looks clean. Max 25 MB."
               disabled={form.loading}
               onChange={(url) => patch("logoSrc", url)}
               onError={(message) =>
@@ -175,7 +200,7 @@ export default function AdminSettingsPage(): React.JSX.Element {
               }
             />
             <div className="admin-field">
-              <label htmlFor="bookingUrl">Booking URL</label>
+              <label htmlFor="bookingUrl">Online booking link (optional)</label>
               <input
                 id="bookingUrl"
                 value={settings.bookingUrl}
@@ -316,20 +341,22 @@ export default function AdminSettingsPage(): React.JSX.Element {
         </div>
 
         <div className="admin-card">
-          <h2>Featured media</h2>
-          <p className="admin-muted" style={{ marginTop: -6, marginBottom: 14 }}>
-            Upload hero, story, and CTA images or videos from your PC.
+          <h2>Homepage photos & videos</h2>
+          <p className="admin-field-hint">
+            These appear on the public homepage. Use a short video or a clear
+            photo. {mediaHint("both")}
           </p>
           {(["hero", "story", "cta"] as const).map((slot) => (
             <div key={slot} className="admin-item" style={{ marginBottom: 12 }}>
               <div className="admin-item-head">
-                <strong>{slot}</strong>
+                <strong>{SLOT_LABELS[slot]}</strong>
               </div>
               <MediaUploadField
                 id={`${slot}-src`}
-                label="Media file"
+                label="Upload photo or video"
                 value={settings.images[slot]?.src || ""}
                 kind={settings.images[slot]?.kind || "image"}
+                mode="both"
                 disabled={form.loading}
                 onChange={(url) =>
                   patch("images", {
@@ -366,7 +393,9 @@ export default function AdminSettingsPage(): React.JSX.Element {
               />
               <div className="admin-grid admin-grid-2">
                 <div className="admin-field">
-                  <label htmlFor={`${slot}-alt`}>Alt text</label>
+                  <label htmlFor={`${slot}-alt`}>
+                    Short description (for accessibility)
+                  </label>
                   <input
                     id={`${slot}-alt`}
                     value={settings.images[slot]?.alt || ""}
@@ -379,10 +408,11 @@ export default function AdminSettingsPage(): React.JSX.Element {
                         },
                       })
                     }
+                    placeholder="e.g. Barber finishing a fade"
                   />
                 </div>
                 <div className="admin-field">
-                  <label htmlFor={`${slot}-kind`}>Kind</label>
+                  <label htmlFor={`${slot}-kind`}>This file is a…</label>
                   <select
                     id={`${slot}-kind`}
                     value={settings.images[slot]?.kind || "image"}
@@ -396,8 +426,8 @@ export default function AdminSettingsPage(): React.JSX.Element {
                       })
                     }
                   >
-                    <option value="image">image</option>
-                    <option value="video">video</option>
+                    <option value="image">Photo / image</option>
+                    <option value="video">Video</option>
                   </select>
                 </div>
               </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { useAdminForm } from "@/components/admin/useAdminForm";
 import { getPublishLog, publishSection } from "@/lib/admin-api";
@@ -11,14 +12,38 @@ const SECTIONS: Array<{ id: PublishSection; label: string; hint: string }> = [
   {
     id: "all",
     label: "Publish everything",
-    hint: "Settings, locales, services, gallery, testimonials, and hours.",
+    hint: "Safest choice if you edited many sections — updates the whole site.",
   },
-  { id: "settings", label: "Settings", hint: "Brand, contact, SEO, media slots." },
-  { id: "locales", label: "Locales", hint: "English and Arabic dictionary copy." },
-  { id: "services", label: "Services", hint: "Categories, items, and prices." },
-  { id: "gallery", label: "Gallery", hint: "Homepage work gallery." },
-  { id: "testimonials", label: "Testimonials", hint: "Reviews carousel." },
-  { id: "hours", label: "Hours", hint: "Opening hours schedule." },
+  {
+    id: "settings",
+    label: "Logo & contact",
+    hint: "Logo, phone, maps, hero / story / CTA media.",
+  },
+  {
+    id: "locales",
+    label: "Website text",
+    hint: "Homepage text and other English / Arabic labels.",
+  },
+  {
+    id: "services",
+    label: "Services & prices",
+    hint: "Menu names and prices.",
+  },
+  {
+    id: "gallery",
+    label: "Gallery",
+    hint: "Work photos and videos.",
+  },
+  {
+    id: "testimonials",
+    label: "Reviews",
+    hint: "Customer quotes.",
+  },
+  {
+    id: "hours",
+    label: "Opening hours",
+    hint: "Daily open / closed times.",
+  },
 ];
 
 type LogRow = {
@@ -65,13 +90,23 @@ export default function AdminPublishPage(): React.JSX.Element {
     <>
       <div className="admin-header">
         <div>
-          <h1>Publish</h1>
+          <h1>Publish to live site</h1>
           <p>
-            Promote draft content to the live website. Prefer section publishes
-            when iterating; use “Publish everything” before a full release.
+            Saved drafts stay private until you publish. Publishing updates{" "}
+            <strong>www.thebutlerbarber.com</strong> for visitors.
           </p>
         </div>
       </div>
+
+      <AdminGuide
+        title="When should I publish?"
+        steps={[
+          "Edit a section and click Save draft.",
+          "Preview the public site if you want (open View site).",
+          "Come here and publish that section — or Publish everything.",
+          "Wait a few seconds, then refresh the public website.",
+        ]}
+      />
 
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />

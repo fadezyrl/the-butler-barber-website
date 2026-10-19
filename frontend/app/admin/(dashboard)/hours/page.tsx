@@ -2,8 +2,10 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 
+import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { useAdminForm } from "@/components/admin/useAdminForm";
+import { HOW_TO_PUBLISH } from "@/lib/admin-media-guide";
 import {
   getAdminContent,
   publishSection,
@@ -121,7 +123,7 @@ export default function AdminHoursPage(): React.JSX.Element {
       <div className="admin-header">
         <div>
           <h1>Opening hours</h1>
-          <p>Per-day schedule shown on the contact section.</p>
+          <p>Set open and close times for each day (or mark a day closed).</p>
         </div>
         <div className="admin-actions">
           <button
@@ -142,6 +144,18 @@ export default function AdminHoursPage(): React.JSX.Element {
           </button>
         </div>
       </div>
+
+      <AdminGuide
+        title="Tips"
+        steps={[
+          "Use 24-hour time like 09:00 and 23:30.",
+          "Tick Closed if the shop is shut that day.",
+          "Optional display text can override what visitors see (e.g. 9 AM – 11:30 PM).",
+          "Save & publish when done.",
+        ]}
+      >
+        <p>{HOW_TO_PUBLISH}</p>
+      </AdminGuide>
 
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />

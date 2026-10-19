@@ -2,8 +2,10 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 
+import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { useAdminForm } from "@/components/admin/useAdminForm";
+import { HOW_TO_PUBLISH } from "@/lib/admin-media-guide";
 import type { Dictionary, Locale } from "@/data/dictionary";
 import {
   getAdminContent,
@@ -110,14 +112,17 @@ export default function AdminHeroStoryPage(): React.JSX.Element {
     <>
       <div className="admin-header">
         <div>
-          <h1>Hero & Story</h1>
-          <p>Edit landing copy for English and Arabic.</p>
+          <h1>Homepage text</h1>
+          <p>
+            Change the big headlines and paragraphs at the top of the website
+            (English and Arabic).
+          </p>
         </div>
         <div className="admin-actions">
           <select
             value={locale}
             onChange={(e) => setLocale(e.target.value as Locale)}
-            aria-label="Locale"
+            aria-label="Language"
           >
             <option value="en">English</option>
             <option value="ar">Arabic</option>
@@ -140,6 +145,18 @@ export default function AdminHeroStoryPage(): React.JSX.Element {
           </button>
         </div>
       </div>
+
+      <AdminGuide
+        title="How to edit text"
+        steps={[
+          "Choose English or Arabic from the dropdown.",
+          "Change any box — keep sentences clear and short.",
+          "Save draft, then Save & publish for the live site.",
+          "To change the hero video/photo, go to Logo & contact.",
+        ]}
+      >
+        <p>{HOW_TO_PUBLISH}</p>
+      </AdminGuide>
 
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />

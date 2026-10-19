@@ -39,12 +39,18 @@ export const uploadMedia = async ({ file, alt = "", adminId = null }) => {
   ];
 
   if (!allowed.includes(file.mimetype)) {
-    throw new AppError("Unsupported file type", 400);
+    throw new AppError(
+      "Unsupported file type. Use JPG, PNG, WEBP, GIF images or MP4, WEBM, MOV videos.",
+      400,
+    );
   }
 
   const maxBytes = 25 * 1024 * 1024;
   if (file.size > maxBytes) {
-    throw new AppError("File too large (max 25MB)", 400);
+    throw new AppError(
+      "File too large. Maximum size is 25 MB. Please compress and try again.",
+      400,
+    );
   }
 
   const ext = path.extname(file.originalname) || "";

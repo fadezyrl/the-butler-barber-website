@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { MediaUploadField } from "@/components/admin/MediaUploadField";
 import { useAdminForm } from "@/components/admin/useAdminForm";
@@ -12,6 +13,7 @@ import {
   uploadMedia,
   upsertGalleryItem,
 } from "@/lib/admin-api";
+import { HOW_TO_PUBLISH, MEDIA_LIMITS, mediaHint } from "@/lib/admin-media-guide";
 
 type GalleryRow = {
   id: string;
@@ -121,15 +123,18 @@ export default function AdminGalleryPage(): React.JSX.Element {
       <div className="admin-header">
         <div>
           <h1>Gallery</h1>
-          <p>Upload or link work samples shown on the homepage.</p>
+          <p>
+            Photos and videos in the “Our Work” section on the homepage.
+          </p>
         </div>
         <div className="admin-actions">
           <label className="admin-btn admin-btn-secondary" style={{ cursor: "pointer" }}>
-            Upload media
+            {form.loading ? "Uploading…" : "Add photo / video"}
             <input
               type="file"
-              accept="image/*,video/*"
+              accept={MEDIA_LIMITS.allAccept}
               hidden
+              disabled={form.loading}
               onChange={addFromUpload}
             />
           </label>
@@ -139,7 +144,7 @@ export default function AdminGalleryPage(): React.JSX.Element {
             onClick={addBlank}
             disabled={form.loading}
           >
-            Add by URL
+            Add from link (optional)
           </button>
           <button
             className="admin-btn"
@@ -151,6 +156,19 @@ export default function AdminGalleryPage(): React.JSX.Element {
           </button>
         </div>
       </div>
+
+      <AdminGuide
+        title="How to change gallery images"
+        steps={[
+          "Click “Add photo / video” and pick a file from your computer.",
+          "Write a short English (and Arabic if you want) description.",
+          "Click Save on that item.",
+          "When finished, click Publish gallery.",
+        ]}
+      >
+        <p>{mediaHint("both")}</p>
+        <p>{HOW_TO_PUBLISH}</p>
+      </AdminGuide>
 
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />
@@ -194,9 +212,10 @@ export default function AdminGalleryPage(): React.JSX.Element {
                 </div>
                 <MediaUploadField
                   id={`gallery-media-${item.id}`}
-                  label="Media file"
+                  label="Replace photo or video"
                   value={src}
                   kind={item.draft_kind}
+                  mode="both"
                   disabled={form.loading}
                   onChange={(url) =>
                     setItems((prev) =>
@@ -231,7 +250,7 @@ export default function AdminGalleryPage(): React.JSX.Element {
                 />
                 <div className="admin-grid admin-grid-2">
                   <div className="admin-field">
-                    <label>Kind</label>
+                    <label>This file is a…</label>
                     <select
                       value={item.draft_kind}
                       onChange={(e) =>
@@ -249,14 +268,15 @@ export default function AdminGalleryPage(): React.JSX.Element {
                         )
                       }
                     >
-                      <option value="image">image</option>
-                      <option value="video">video</option>
+                      <option value="image">Photo / image</option>
+                      <option value="video">Video</option>
                     </select>
                   </div>
                   <div className="admin-field">
-                    <label>Alt (EN)</label>
+                    <label>Description (English)</label>
                     <input
                       value={item.draft_alt_en}
+                      placeholder="e.g. Fresh skin fade"
                       onChange={(e) =>
                         setItems((prev) =>
                           prev.map((g) =>
@@ -269,7 +289,7 @@ export default function AdminGalleryPage(): React.JSX.Element {
                     />
                   </div>
                   <div className="admin-field">
-                    <label>Alt (AR)</label>
+                    <label>Description (Arabic)</label>
                     <input
                       value={item.draft_alt_ar}
                       dir="rtl"
@@ -299,7 +319,7 @@ export default function AdminGalleryPage(): React.JSX.Element {
                       )
                     }
                   />
-                  Visible
+                  Show on website
                 </label>
               </div>
             );

@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { useAdminForm } from "@/components/admin/useAdminForm";
+import { HOW_TO_PUBLISH } from "@/lib/admin-media-guide";
 import {
   deleteServiceCategory,
   deleteServiceItem,
@@ -151,8 +153,8 @@ export default function AdminServicesPage(): React.JSX.Element {
     <>
       <div className="admin-header">
         <div>
-          <h1>Services</h1>
-          <p>Manage categories, items, prices, and visibility.</p>
+          <h1>Services & prices</h1>
+          <p>Change service names and prices shown on the website menu.</p>
         </div>
         <div className="admin-actions">
           <button
@@ -173,6 +175,18 @@ export default function AdminServicesPage(): React.JSX.Element {
           </button>
         </div>
       </div>
+
+      <AdminGuide
+        title="How to update a price"
+        steps={[
+          "Find the service in the list below.",
+          "Edit the English / Arabic name if needed.",
+          "Change the price (example: 2.500 BD).",
+          "Click Save on that row, then Publish services.",
+        ]}
+      >
+        <p>{HOW_TO_PUBLISH}</p>
+      </AdminGuide>
 
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />

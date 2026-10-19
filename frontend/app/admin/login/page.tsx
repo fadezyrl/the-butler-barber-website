@@ -63,8 +63,11 @@ export default function AdminLoginPage(): React.JSX.Element {
     <div className="admin-root">
       <div className="admin-login">
         <form className="admin-login-card" onSubmit={onSubmit}>
-          <h1>Butler CMS</h1>
-          <p>Sign in to manage The Butler Barber website content.</p>
+          <h1>Website editor</h1>
+          <p>
+            Sign in to change text, prices, photos and videos on The Butler
+            Barber website.
+          </p>
           <AdminStatus type="error" message={error} />
           <div className="admin-field">
             <label htmlFor="email">Email</label>

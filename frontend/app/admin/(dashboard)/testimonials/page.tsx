@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { AdminGuide } from "@/components/admin/AdminGuide";
 import { AdminStatus } from "@/components/admin/AdminStatus";
 import { useAdminForm } from "@/components/admin/useAdminForm";
 import {
@@ -10,6 +11,7 @@ import {
   publishSection,
   upsertTestimonial,
 } from "@/lib/admin-api";
+import { HOW_TO_PUBLISH } from "@/lib/admin-media-guide";
 
 type TestimonialRow = {
   id: string;
@@ -96,8 +98,8 @@ export default function AdminTestimonialsPage(): React.JSX.Element {
     <>
       <div className="admin-header">
         <div>
-          <h1>Testimonials</h1>
-          <p>Guest quotes shown in the reviews carousel.</p>
+          <h1>Reviews</h1>
+          <p>Customer quotes shown on the homepage reviews section.</p>
         </div>
         <div className="admin-actions">
           <button
@@ -106,7 +108,7 @@ export default function AdminTestimonialsPage(): React.JSX.Element {
             onClick={addItem}
             disabled={form.loading}
           >
-            Add testimonial
+            Add review
           </button>
           <button
             className="admin-btn"
@@ -114,10 +116,21 @@ export default function AdminTestimonialsPage(): React.JSX.Element {
             onClick={onPublish}
             disabled={form.loading}
           >
-            Publish testimonials
+            Publish reviews
           </button>
         </div>
       </div>
+
+      <AdminGuide
+        title="How to add a review"
+        steps={[
+          "Click Add review.",
+          "Enter the customer name, quote (English / Arabic), and source (e.g. Google Review).",
+          "Save that card, then Publish reviews.",
+        ]}
+      >
+        <p>{HOW_TO_PUBLISH}</p>
+      </AdminGuide>
 
       <AdminStatus type="error" message={form.error} />
       <AdminStatus type="success" message={form.success} />
