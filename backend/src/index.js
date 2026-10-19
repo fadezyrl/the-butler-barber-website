@@ -30,7 +30,23 @@ const start = async () => {
   app.use(morgan(env.NODE_ENV === "production" ? "combined" : "dev"));
   app.use(express.json({ limit: "2mb" }));
   app.use(cookieParser());
-  app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+  app.use(
+    "/uploads",
+    express.static(path.join(__dirname, "../uploads"), {
+      fallthrough: false,
+      setHeaders: (res, filePath) => {
+        if (/\.mp4$/i.test(filePath)) {
+          res.setHeader("Content-Type", "video/mp4");
+        } else if (/\.webm$/i.test(filePath)) {
+          res.setHeader("Content-Type", "video/webm");
+        } else if (/\.mov$/i.test(filePath)) {
+          res.setHeader("Content-Type", "video/quicktime");
+        }
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      },
+    }),
+  );
 
   app.get("/api/health", (req, res) => {
     res.json({

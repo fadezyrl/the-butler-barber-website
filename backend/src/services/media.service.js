@@ -23,7 +23,46 @@ const ensureLocalDir = () => {
   }
 };
 
-export const uploadMedia = async ({ file, alt = "", adminId = null }) => {
+const normalizeBaseUrl = (value) =>
+  String(value || "")
+    .trim()
+    .replace(/\/$/, "");
+
+/** Prefer PUBLIC_API_URL, then request origin, then localhost PORT. */
+export const resolvePublicApiBase = (requestBaseUrl = "") => {
+  const fromEnv = normalizeBaseUrl(env.PUBLIC_API_URL);
+  if (fromEnv) return fromEnv;
+  const fromRequest = normalizeBaseUrl(requestBaseUrl);
+  if (fromRequest) return fromRequest;
+  return `http://localhost:${env.PORT}`;
+};
+
+/** Fix older assets that were saved as http://localhost:PORT/uploads/... */
+export const rewriteMediaUrl = (url, requestBaseUrl = "") => {
+  if (!url || typeof url !== "string") return url;
+  const base = resolvePublicApiBase(requestBaseUrl);
+  return url.replace(/^https?:\/\/localhost:\d+(?=\/)/i, base);
+};
+
+const withPublicUrl = (asset, requestBaseUrl = "") => {
+  if (!asset) return asset;
+  const publicUrl = rewriteMediaUrl(
+    asset.public_url || asset.url || "",
+    requestBaseUrl,
+  );
+  return {
+    ...asset,
+    public_url: publicUrl,
+    url: publicUrl,
+  };
+};
+
+export const uploadMedia = async ({
+  file,
+  alt = "",
+  adminId = null,
+  publicBaseUrl = "",
+}) => {
   if (!file) {
     throw new AppError("No file provided", 400);
   }
@@ -79,7 +118,8 @@ export const uploadMedia = async ({ file, alt = "", adminId = null }) => {
     const filename = objectPath.replace(/\//g, "_");
     const fullPath = path.join(localUploadDir, filename);
     fs.writeFileSync(fullPath, file.buffer);
-    publicUrl = `http://localhost:${env.PORT}/uploads/${filename}`;
+    const base = resolvePublicApiBase(publicBaseUrl);
+    publicUrl = `${base}/uploads/${filename}`;
   }
 
   const store = loadStore();
@@ -95,7 +135,7 @@ export const uploadMedia = async ({ file, alt = "", adminId = null }) => {
   };
   store.media_assets.unshift(asset);
   saveStore(store);
-  return asset;
+  return withPublicUrl(asset, publicBaseUrl);
 };
 
 export const deleteMedia = async (id) => {
@@ -119,7 +159,9 @@ export const deleteMedia = async (id) => {
   return { deleted: true };
 };
 
-export const listMedia = async () => {
+export const listMedia = async (requestBaseUrl = "") => {
   const store = loadStore();
-  return store.media_assets;
+  return store.media_assets.map((asset) =>
+    withPublicUrl(asset, requestBaseUrl),
+  );
 };

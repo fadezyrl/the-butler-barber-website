@@ -35,6 +35,16 @@ const upload = multer({
   limits: { fileSize: 25 * 1024 * 1024 },
 });
 
+const getRequestPublicBase = (req) => {
+  const forwardedProto = req.get("x-forwarded-proto");
+  const proto = (forwardedProto || req.protocol || "http").split(",")[0].trim();
+  const host = (req.get("x-forwarded-host") || req.get("host") || "")
+    .split(",")[0]
+    .trim();
+  if (!host) return "";
+  return `${proto}://${host}`;
+};
+
 router.use(protect);
 
 router.get("/dashboard", async (req, res, next) => {
@@ -271,7 +281,7 @@ router.post(
 
 router.get("/media", async (req, res, next) => {
   try {
-    res.json(await listMedia());
+    res.json(await listMedia(getRequestPublicBase(req)));
   } catch (err) {
     next(err);
   }
@@ -283,6 +293,7 @@ router.post("/media/upload", upload.single("file"), async (req, res, next) => {
       file: req.file,
       alt: req.body?.alt || "",
       adminId: req.admin.id,
+      publicBaseUrl: getRequestPublicBase(req),
     });
     res.status(201).json(asset);
   } catch (err) {

@@ -16,6 +16,8 @@ const envSchema = z.object({
   ACCESS_TOKEN_TTL: z.string().default("15m"),
   REFRESH_TOKEN_TTL: z.string().default("7d"),
   FRONTEND_ORIGIN: z.string().default("http://localhost:3000"),
+  /** Public base URL of this API (e.g. https://api.example.com). Used for /uploads links. */
+  PUBLIC_API_URL: z.string().optional().default(""),
   NEXT_REVALIDATE_URL: z
     .string()
     .default("http://localhost:3000/api/revalidate"),
