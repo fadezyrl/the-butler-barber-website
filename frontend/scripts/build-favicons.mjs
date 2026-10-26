@@ -1,22 +1,137 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
-const root = process.cwd();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(__dirname, "..");
 const outDir = path.join(root, "public", "icons");
+const logoPath = path.join(root, "public", "assets", "logo", "butler_logo.png");
+
 fs.mkdirSync(outDir, { recursive: true });
 
-const svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#1C1C1B"/>
-  <rect x="1.25" y="1.25" width="29.5" height="29.5" rx="5" fill="none" stroke="#D4AE78" stroke-width="1.25"/>
-  <path fill="#D4AE78" d="M9.2 7.2h7.1c2.95 0 4.85 1.45 4.85 3.7 0 1.55-.85 2.7-2.25 3.25 1.8.55 2.9 1.9 2.9 3.85 0 2.55-2.1 4.1-5.35 4.1H9.2V7.2zm3.15 2.35v3.55h3.55c1.35 0 2.1-.65 2.1-1.8s-.75-1.75-2.1-1.75h-3.55zm0 5.9v4.05h4.05c1.55 0 2.45-.75 2.45-2.05s-.9-2-2.45-2H12.35z"/>
-</svg>`;
+const BG = { r: 28, g: 28, b: 27, alpha: 1 };
+const GOLD = "#D4AE78";
 
-const writePng = async (size, file) => {
-  await sharp(Buffer.from(svg)).resize(size, size).png().toFile(file);
-  console.log("wrote", file);
+const isGoldPixel = (data, i) => {
+  const r = data[i];
+  const g = data[i + 1];
+  const b = data[i + 2];
+  const a = data[i + 3];
+  return (
+    a > 180 &&
+    r > 140 &&
+    g > 100 &&
+    b > 60 &&
+    r > g &&
+    g >= b - 10 &&
+    r - b > 35
+  );
 };
+
+/** Crop left mark from butler_logo.png: vertical "The" + flourished "B". */
+const detectLogoBCrop = async () => {
+  const { data, info } = await sharp(logoPath)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const w = info.width;
+  const h = info.height;
+  const y0 = Math.round(h * 0.25);
+  const y1 = Math.round(h * 0.85);
+  const colCounts = new Array(w).fill(0);
+
+  for (let y = y0; y < y1; y += 1) {
+    for (let x = 0; x < w; x += 1) {
+      if (isGoldPixel(data, (y * w + x) * 4)) colCounts[x] += 1;
+    }
+  }
+
+  let start = 0;
+  while (start < w && colCounts[start] < 5) start += 1;
+
+  let peak = start;
+  let peakVal = 0;
+  for (let x = start; x < Math.min(w, start + 200); x += 1) {
+    if (colCounts[x] > peakVal) {
+      peakVal = colCounts[x];
+      peak = x;
+    }
+  }
+
+  let valley = peak;
+  let minAfter = Number.POSITIVE_INFINITY;
+  for (let x = peak; x < Math.min(w, peak + 180); x += 1) {
+    if (colCounts[x] < minAfter) {
+      minAfter = colCounts[x];
+      valley = x;
+    }
+    if (minAfter < 8 && colCounts[x] > minAfter + 15 && x > peak + 40) break;
+  }
+
+  const left = 0;
+  const end = valley;
+  let minY = h;
+  let maxY = 0;
+  for (let y = 0; y < h; y += 1) {
+    for (let x = left; x <= end; x += 1) {
+      const i = (y * w + x) * 4;
+      const a = data[i + 3];
+      if (a < 180) continue;
+      const bright = data[i] > 200 && data[i + 1] > 200 && data[i + 2] > 200;
+      if (bright || isGoldPixel(data, i)) {
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+
+  return {
+    left,
+    top: Math.max(0, minY - 6),
+    width: Math.min(w, end - left + 10),
+    height: Math.min(h - Math.max(0, minY - 6), maxY - minY + 18),
+  };
+};
+
+const buildMarkPng = async (size, crop) => {
+  const cropped = await sharp(logoPath)
+    .extract(crop)
+    .resize(Math.round(size * 0.82), Math.round(size * 0.82), {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .png()
+    .toBuffer();
+
+  const radius = Math.round(size * 0.18);
+  const inset = Math.max(1, Math.round(size * 0.04));
+  const stroke = Math.max(1, Math.round(size * 0.04));
+  const frame = Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+  <rect width="${size}" height="${size}" rx="${radius}" fill="#1C1C1B"/>
+  <rect x="${inset}" y="${inset}" width="${size - inset * 2}" height="${size - inset * 2}" rx="${Math.max(1, radius - inset)}" fill="none" stroke="${GOLD}" stroke-width="${stroke}"/>
+</svg>`);
+
+  return sharp(frame)
+    .composite([{ input: cropped, gravity: "centre" }])
+    .png()
+    .toBuffer();
+};
+
+const writeFromLogoFull = async (size, file) => {
+  await sharp(logoPath)
+    .resize(size, size, {
+      fit: "contain",
+      background: BG,
+    })
+    .png()
+    .toFile(file);
+  console.log("wrote", path.relative(root, file), "(full logo)");
+};
+
+const crop = await detectLogoBCrop();
+console.log("logo B crop", crop);
 
 const p16 = path.join(outDir, "icon-16.png");
 const p32 = path.join(outDir, "icon-32.png");
@@ -24,11 +139,17 @@ const p48 = path.join(outDir, "icon-48.png");
 const p180 = path.join(outDir, "apple-touch-icon.png");
 const p192 = path.join(outDir, "icon-192.png");
 
-await writePng(16, p16);
-await writePng(32, p32);
-await writePng(48, p48);
-await writePng(180, p180);
-await writePng(192, p192);
+for (const [size, file] of [
+  [16, p16],
+  [32, p32],
+  [48, p48],
+]) {
+  fs.writeFileSync(file, await buildMarkPng(size, crop));
+  console.log("wrote", path.relative(root, file), "(logo B)");
+}
+
+await writeFromLogoFull(180, p180);
+await writeFromLogoFull(192, p192);
 
 const sizes = [
   { size: 16, file: p16 },
@@ -68,3 +189,17 @@ for (const img of images) {
 
 fs.writeFileSync(path.join(root, "public", "favicon.ico"), buf);
 console.log("wrote public/favicon.ico", buf.length);
+
+for (const name of [
+  "_preview-b.png",
+  "_b-only.png",
+  "_b-only2.png",
+  "_c0.png",
+  "_c1.png",
+  "_c2.png",
+]) {
+  const file = path.join(outDir, name);
+  if (fs.existsSync(file)) fs.unlinkSync(file);
+}
+const tmp = path.join(outDir, "_tmp");
+if (fs.existsSync(tmp)) fs.rmSync(tmp, { recursive: true, force: true });
