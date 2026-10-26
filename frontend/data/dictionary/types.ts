@@ -1,4 +1,8 @@
-import type { ServiceCategoryId, ServiceItemId } from "@/data/site-config";
+import type {
+  ServiceCategoryId,
+  ServiceItemId,
+  TeamMemberId,
+} from "@/data/site-config";
 
 export type Locale = "en" | "ar";
 
@@ -32,6 +36,7 @@ export type Dictionary = {
   nav: {
     story: string;
     services: string;
+    team: string;
     work: string;
     contact: string;
     book: string;
@@ -72,6 +77,29 @@ export type Dictionary = {
     instagram: string;
     scrollHint: string;
     captions: string[];
+  };
+  team: {
+    titleLead: string;
+    titleEm: string;
+    intro: string;
+    members: Record<
+      string,
+      {
+        name: string;
+        role: string;
+        bio: string;
+      }
+    > &
+      Partial<
+        Record<
+          TeamMemberId,
+          {
+            name: string;
+            role: string;
+            bio: string;
+          }
+        >
+      >;
   };
   reviews: {
     eyebrow: string;

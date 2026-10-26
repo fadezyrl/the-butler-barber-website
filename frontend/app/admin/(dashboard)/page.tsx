@@ -31,6 +31,11 @@ const QUICK = [
     blurb: "Add or replace work photos / videos",
   },
   {
+    href: "/admin/team",
+    title: "Our Team",
+    blurb: "Team photos, names, roles and bios",
+  },
+  {
     href: "/admin/testimonials",
     title: "Reviews",
     blurb: "Customer quotes on the site",

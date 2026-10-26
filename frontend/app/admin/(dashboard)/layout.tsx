@@ -15,6 +15,7 @@ const NAV: Array<{ href: string; label: string; exact?: boolean }> = [
   { href: "/admin/hero-story", label: "Homepage text" },
   { href: "/admin/services", label: "Services & prices" },
   { href: "/admin/gallery", label: "Gallery" },
+  { href: "/admin/team", label: "Our Team" },
   { href: "/admin/testimonials", label: "Reviews" },
   { href: "/admin/hours", label: "Opening hours" },
   { href: "/admin/locales", label: "Other website text" },

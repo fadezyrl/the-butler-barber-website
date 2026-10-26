@@ -58,11 +58,35 @@ export const getPublishedSite = async (): Promise<PublishedSite> => {
       return buildFallbackSite();
     }
 
+    const mergeDictionary = (
+      locale: "en" | "ar",
+    ): (typeof fallbackDictionaries)["en"] => {
+      const incoming = data.dictionaries[locale];
+      const fallback = fallbackDictionaries[locale];
+      if (!incoming) return fallback;
+      return {
+        ...fallback,
+        ...incoming,
+        nav: {
+          ...fallback.nav,
+          ...incoming.nav,
+        },
+        team: {
+          ...fallback.team,
+          ...(incoming.team || {}),
+          members: {
+            ...fallback.team.members,
+            ...(incoming.team?.members || {}),
+          },
+        },
+      };
+    };
+
     return {
       ...data,
       dictionaries: {
-        en: data.dictionaries.en ?? fallbackDictionaries.en,
-        ar: data.dictionaries.ar ?? fallbackDictionaries.ar,
+        en: mergeDictionary("en"),
+        ar: mergeDictionary("ar"),
       },
       siteConfig: {
         ...FALLBACK_SITE_CONFIG,
@@ -74,6 +98,10 @@ export const getPublishedSite = async (): Promise<PublishedSite> => {
             data.siteConfig.images?.gallery ??
             FALLBACK_SITE_CONFIG.images.gallery,
         },
+        team:
+          data.siteConfig.team && data.siteConfig.team.length > 0
+            ? data.siteConfig.team
+            : FALLBACK_SITE_CONFIG.team,
         reviews: data.siteConfig.reviews ?? FALLBACK_SITE_CONFIG.reviews,
         serviceMenu:
           data.siteConfig.serviceMenu ?? FALLBACK_SITE_CONFIG.serviceMenu,

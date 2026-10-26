@@ -11,6 +11,7 @@ import { Map } from "@/components/sections/Map/Map";
 import { Reviews } from "@/components/sections/Reviews/Reviews";
 import { Services } from "@/components/sections/Services/Services";
 import { Story } from "@/components/sections/Story/Story";
+import { Team } from "@/components/sections/Team/Team";
 import { SkipLink } from "@/components/ui/SkipLink";
 import { WhatsAppFloat } from "@/components/ui/WhatsAppFloat";
 import { LanguageProvider } from "@/context/LanguageContext";
@@ -56,6 +57,7 @@ export default async function Home(): Promise<React.JSX.Element> {
           <Hero />
           <Story />
           <Services />
+          <Team />
           <Gallery />
           <Reviews />
           <Contact />

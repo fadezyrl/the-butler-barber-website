@@ -65,6 +65,13 @@ export type ServiceCategory = {
   items: ServiceItem[];
 };
 
+export type TeamMemberId = "muhammadFaraz" | "fahimAslam" | "joelReynold";
+
+export type TeamMember = {
+  id: TeamMemberId | string;
+  image: MediaSlot;
+};
+
 export type SiteConfig = {
   logoSrc: string;
   bookingUrl: string;
@@ -95,6 +102,7 @@ export type SiteConfig = {
     cta: MediaSlot;
     gallery: MediaSlot[];
   };
+  team: TeamMember[];
   reviews: Review[];
   serviceMenu: ServiceCategory[];
   openingHours?: OpeningHourDay[];
@@ -176,6 +184,32 @@ export const SITE_CONFIG: SiteConfig = {
       },
     ],
   },
+  team: [
+    {
+      id: "muhammadFaraz",
+      image: {
+        src: "/assets/team/muhammad-faraz.jpg",
+        alt: "Muhammad Faraz, Founder & CEO of The Butler Barber",
+        kind: "image",
+      },
+    },
+    {
+      id: "fahimAslam",
+      image: {
+        src: "/assets/team/fahim-aslam.jpg",
+        alt: "Fahim Aslam, Professional Barber & Stylist",
+        kind: "image",
+      },
+    },
+    {
+      id: "joelReynold",
+      image: {
+        src: "/assets/team/joel-reynold.jpg",
+        alt: "Joel Reynold, Barber & Stylist",
+        kind: "image",
+      },
+    },
+  ],
   reviews: [
     {
       quote:

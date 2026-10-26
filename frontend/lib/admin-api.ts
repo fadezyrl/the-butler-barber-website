@@ -198,6 +198,20 @@ export const reorderTestimonials = (orderedIds: string[]): Promise<unknown> =>
     body: { orderedIds },
   });
 
+export const upsertTeamMember = (
+  payload: Record<string, unknown>,
+): Promise<unknown> =>
+  adminFetch("/api/admin/team", { method: "POST", body: payload });
+
+export const deleteTeamMember = (id: string): Promise<unknown> =>
+  adminFetch(`/api/admin/team/${id}`, { method: "DELETE" });
+
+export const reorderTeamMembers = (orderedIds: string[]): Promise<unknown> =>
+  adminFetch("/api/admin/team/reorder", {
+    method: "POST",
+    body: { orderedIds },
+  });
+
 const normalizeMediaAsset = (row: Record<string, unknown>): MediaAsset => ({
   id: String(row.id),
   url: String(row.public_url || row.url || ""),

@@ -175,6 +175,38 @@ const run = async () => {
       );
     }
 
+    await client.query("DELETE FROM team_members");
+    let teamOrder = 0;
+    for (const member of siteConfig.team || []) {
+      const copyEn = en.team?.members?.[member.id] || {};
+      const copyAr = ar.team?.members?.[member.id] || {};
+      await client.query(
+        `INSERT INTO team_members (
+           slug, media_url, kind, name, role_en, role_ar, bio_en, bio_ar,
+           alt_en, alt_ar, sort_order, is_visible,
+           draft_media_url, draft_kind, draft_name, draft_role_en, draft_role_ar,
+           draft_bio_en, draft_bio_ar, draft_alt_en, draft_alt_ar,
+           draft_sort_order, draft_is_visible, is_published
+         ) VALUES (
+           $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,TRUE,
+           $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,TRUE,TRUE
+         )`,
+        [
+          member.id,
+          member.src,
+          member.kind || "image",
+          copyEn.name || member.id,
+          copyEn.role || "",
+          copyAr.role || copyEn.role || "",
+          copyEn.bio || "",
+          copyAr.bio || copyEn.bio || "",
+          member.alt || copyEn.name || "",
+          member.alt || copyAr.name || copyEn.name || "",
+          teamOrder++,
+        ],
+      );
+    }
+
     for (const day of DAYS) {
       await client.query(
         `INSERT INTO opening_hours (

@@ -7,13 +7,16 @@ import {
   deleteGalleryItem,
   deleteServiceCategory,
   deleteServiceItem,
+  deleteTeamMember,
   deleteTestimonial,
   reorderGallery,
   reorderServiceItems,
+  reorderTeamMembers,
   reorderTestimonials,
   upsertGalleryItem,
   upsertServiceCategory,
   upsertServiceItem,
+  upsertTeamMember,
   upsertTestimonial,
 } from "../services/content.service.js";
 import {
@@ -57,6 +60,7 @@ router.get("/dashboard", async (req, res, next) => {
         services: draft.services.items.length,
         gallery: draft.gallery.length,
         testimonials: draft.testimonials.length,
+        team: draft.team.length,
       },
       recentPublishes: log,
       updatedAt: draft.settings.updatedAt,
@@ -279,6 +283,54 @@ router.post(
   },
 );
 
+router.post(
+  "/team",
+  validateBody(
+    z.object({
+      id: z.string().uuid().optional(),
+      slug: z.string().min(1).optional(),
+      mediaUrl: z.string().optional(),
+      kind: z.enum(["image", "video"]).optional(),
+      name: z.string().optional(),
+      roleEn: z.string().optional(),
+      roleAr: z.string().optional(),
+      bioEn: z.string().optional(),
+      bioAr: z.string().optional(),
+      altEn: z.string().optional(),
+      altAr: z.string().optional(),
+      sortOrder: z.number().int().optional(),
+      isVisible: z.boolean().optional(),
+    }),
+  ),
+  async (req, res, next) => {
+    try {
+      res.json(await upsertTeamMember(req.validated));
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+router.delete("/team/:id", async (req, res, next) => {
+  try {
+    res.json(await deleteTeamMember(req.params.id));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post(
+  "/team/reorder",
+  validateBody(z.object({ orderedIds: z.array(z.string().uuid()) })),
+  async (req, res, next) => {
+    try {
+      res.json(await reorderTeamMembers(req.validated.orderedIds));
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
 router.get("/media", async (req, res, next) => {
   try {
     res.json(await listMedia(getRequestPublicBase(req)));
@@ -320,6 +372,7 @@ router.post(
         "services",
         "gallery",
         "testimonials",
+        "team",
         "hours",
       ]),
     }),

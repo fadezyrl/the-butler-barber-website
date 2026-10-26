@@ -20,6 +20,7 @@ const emptyStore = () => ({
   service_items: [],
   gallery_items: [],
   testimonials: [],
+  team_members: [],
   opening_hours: [],
   media_assets: [],
   publish_log: [],
@@ -57,6 +58,7 @@ export const initStore = async () => {
   } else {
     cache = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
   }
+  if (!Array.isArray(cache.team_members)) cache.team_members = [];
   console.log("CMS store: file", DATA_PATH);
 };
 
@@ -69,6 +71,7 @@ export const loadStore = () => {
       cache = emptyStore();
     }
   }
+  if (!Array.isArray(cache.team_members)) cache.team_members = [];
   return cache;
 };
 

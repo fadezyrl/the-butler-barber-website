@@ -29,6 +29,7 @@ export const Footer = (): JSX.Element => {
             <strong>{dictionary.footer.explore}</strong>
             <a href="#story">{dictionary.nav.story}</a>
             <a href="#services">{dictionary.nav.services}</a>
+            <a href="#team">{dictionary.nav.team}</a>
             <a href="#work">{dictionary.nav.work}</a>
             <a href="#contact">{dictionary.nav.contact}</a>
           </nav>

@@ -9,6 +9,7 @@ const SECTIONS = [
   "services",
   "gallery",
   "testimonials",
+  "team",
   "hours",
 ];
 
@@ -69,6 +70,24 @@ export const publishSection = async (section, adminId) => {
       item.quote_en = item.draft_quote_en;
       item.quote_ar = item.draft_quote_ar;
       item.source = item.draft_source;
+      item.sort_order = item.draft_sort_order;
+      item.is_visible = item.draft_is_visible;
+      item.is_published = true;
+    }
+  }
+
+  if (section === "all" || section === "team") {
+    if (!Array.isArray(store.team_members)) store.team_members = [];
+    for (const item of store.team_members) {
+      item.media_url = item.draft_media_url || item.media_url;
+      item.kind = item.draft_kind;
+      item.name = item.draft_name;
+      item.role_en = item.draft_role_en;
+      item.role_ar = item.draft_role_ar;
+      item.bio_en = item.draft_bio_en;
+      item.bio_ar = item.draft_bio_ar;
+      item.alt_en = item.draft_alt_en;
+      item.alt_ar = item.draft_alt_ar;
       item.sort_order = item.draft_sort_order;
       item.is_visible = item.draft_is_visible;
       item.is_published = true;

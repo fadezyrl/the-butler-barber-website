@@ -107,6 +107,7 @@ export type AdminDashboard = {
     services: number;
     gallery: number;
     testimonials: number;
+    team?: number;
   };
   recentPublishes: Array<{
     id: string;
@@ -138,6 +139,7 @@ export type AdminDraftContent = {
   };
   gallery: Array<Record<string, unknown>>;
   testimonials: Array<Record<string, unknown>>;
+  team?: Array<Record<string, unknown>>;
   hours: Array<Record<string, unknown>>;
   preview: {
     settings: CmsSiteSettings;
@@ -145,6 +147,7 @@ export type AdminDraftContent = {
     services: CmsServiceCategory[];
     gallery: CmsGalleryItem[];
     testimonials: CmsTestimonial[];
+    team?: Array<Record<string, unknown>>;
   };
 };
 
@@ -167,4 +170,5 @@ export type PublishSection =
   | "services"
   | "gallery"
   | "testimonials"
+  | "team"
   | "hours";

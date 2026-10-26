@@ -127,6 +127,34 @@ const buildTestimonials = (rows, draft = false) =>
       isPublished: r.is_published,
     }));
 
+const buildTeam = (rows, draft = false) =>
+  (rows || [])
+    .filter((r) => {
+      if (draft) return r.draft_is_visible;
+      return r.is_published && r.is_visible;
+    })
+    .sort(
+      (a, b) =>
+        (draft ? a.draft_sort_order : a.sort_order) -
+        (draft ? b.draft_sort_order : b.sort_order),
+    )
+    .map((r) => ({
+      id: r.id,
+      slug: r.slug,
+      src: draft ? r.draft_media_url || r.media_url : r.media_url,
+      kind: draft ? r.draft_kind : r.kind,
+      name: draft ? r.draft_name : r.name,
+      roleEn: draft ? r.draft_role_en : r.role_en,
+      roleAr: draft ? r.draft_role_ar : r.role_ar,
+      bioEn: draft ? r.draft_bio_en : r.bio_en,
+      bioAr: draft ? r.draft_bio_ar : r.bio_ar,
+      altEn: draft ? r.draft_alt_en : r.alt_en,
+      altAr: draft ? r.draft_alt_ar : r.alt_ar,
+      sortOrder: draft ? r.draft_sort_order : r.sort_order,
+      isVisible: draft ? r.draft_is_visible : r.is_visible,
+      isPublished: r.is_published,
+    }));
+
 const mergeServiceNamesIntoDictionary = (dict, services, locale) => {
   const next = structuredClone(dict);
   if (!next.services) next.services = {};
@@ -139,6 +167,20 @@ const mergeServiceNamesIntoDictionary = (dict, services, locale) => {
       next.services.items[item.slug] =
         locale === "ar" ? item.nameAr : item.nameEn;
     }
+  }
+  return next;
+};
+
+const mergeTeamIntoDictionary = (dict, team, locale) => {
+  const next = structuredClone(dict);
+  if (!next.team) next.team = {};
+  next.team.members = { ...(next.team.members || {}) };
+  for (const member of team) {
+    next.team.members[member.slug] = {
+      name: member.name,
+      role: locale === "ar" ? member.roleAr || member.roleEn : member.roleEn,
+      bio: locale === "ar" ? member.bioAr || member.bioEn : member.bioEn,
+    };
   }
   return next;
 };
@@ -157,6 +199,7 @@ export const getPublishedSite = async () => {
   );
   const gallery = buildGallery(store.gallery_items, false);
   const testimonials = buildTestimonials(store.testimonials, false);
+  const team = buildTeam(store.team_members, false);
   const hours = buildHoursPayload(store.opening_hours, false);
 
   const dictionaries = {};
@@ -167,6 +210,7 @@ export const getPublishedSite = async () => {
       services,
       locale,
     );
+    dict = mergeTeamIntoDictionary(dict, team, locale);
     dict = {
       ...dict,
       gallery: {
@@ -194,12 +238,22 @@ export const getPublishedSite = async () => {
     source: t.source,
   }));
 
+  const teamConfig = team.map((m) => ({
+    id: m.slug,
+    image: {
+      src: m.src,
+      alt: m.altEn || m.name,
+      kind: m.kind || "image",
+    },
+  }));
+
   return {
     settings,
     hours,
     services,
     gallery,
     testimonials,
+    team,
     dictionaries,
     siteConfig: {
       ...settings,
@@ -217,6 +271,7 @@ export const getPublishedSite = async () => {
           kind: g.kind,
         })),
       },
+      team: teamConfig,
       reviews,
       serviceMenu: legacyServiceMenu,
       openingHours: hours,
@@ -248,6 +303,7 @@ export const getAdminDraftSite = async () => {
     },
     gallery: store.gallery_items,
     testimonials: store.testimonials,
+    team: store.team_members || [],
     hours: store.opening_hours,
     preview: {
       settings: store.site_settings?.draft_json || {},
@@ -259,6 +315,7 @@ export const getAdminDraftSite = async () => {
       ),
       gallery: buildGallery(store.gallery_items, true),
       testimonials: buildTestimonials(store.testimonials, true),
+      team: buildTeam(store.team_members, true),
     },
   };
 };

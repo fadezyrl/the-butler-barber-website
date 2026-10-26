@@ -216,3 +216,110 @@ export const reorderTestimonials = async (orderedIds) => {
   saveStore(store);
   return { reordered: true };
 };
+
+const slugifyTeam = (value) => {
+  const parts = String(value || "member")
+    .trim()
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+  if (!parts.length) return `member${Date.now()}`;
+  return (
+    parts[0] +
+    parts
+      .slice(1)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join("")
+  );
+};
+
+export const upsertTeamMember = async (data) => {
+  const store = loadStore();
+  if (!Array.isArray(store.team_members)) store.team_members = [];
+
+  if (data.id) {
+    const item = store.team_members.find((t) => t.id === data.id);
+    if (!item) throw new AppError("Team member not found", 404);
+    if (data.slug !== undefined) item.slug = data.slug;
+    if (data.mediaUrl !== undefined) item.draft_media_url = data.mediaUrl;
+    if (data.kind !== undefined) item.draft_kind = data.kind;
+    if (data.name !== undefined) item.draft_name = data.name;
+    if (data.roleEn !== undefined) item.draft_role_en = data.roleEn;
+    if (data.roleAr !== undefined) item.draft_role_ar = data.roleAr;
+    if (data.bioEn !== undefined) item.draft_bio_en = data.bioEn;
+    if (data.bioAr !== undefined) item.draft_bio_ar = data.bioAr;
+    if (data.altEn !== undefined) item.draft_alt_en = data.altEn;
+    if (data.altAr !== undefined) item.draft_alt_ar = data.altAr;
+    if (data.sortOrder !== undefined) item.draft_sort_order = data.sortOrder;
+    if (data.isVisible !== undefined) item.draft_is_visible = data.isVisible;
+    saveStore(store);
+    return item;
+  }
+
+  let slug =
+    data.slug ||
+    slugifyTeam(data.name) ||
+    `member${store.team_members.length + 1}`;
+  if (store.team_members.some((t) => t.slug === slug)) {
+    if (data.slug) {
+      throw new AppError("Team member slug already exists", 409);
+    }
+    let n = 2;
+    while (store.team_members.some((t) => t.slug === `${slug}${n}`)) n += 1;
+    slug = `${slug}${n}`;
+  }
+
+  const item = {
+    id: newId(),
+    slug,
+    media_url: data.mediaUrl || "",
+    draft_media_url: data.mediaUrl || "",
+    kind: data.kind || "image",
+    draft_kind: data.kind || "image",
+    name: data.name || "",
+    draft_name: data.name || "",
+    role_en: data.roleEn || "",
+    draft_role_en: data.roleEn || "",
+    role_ar: data.roleAr || "",
+    draft_role_ar: data.roleAr || "",
+    bio_en: data.bioEn || "",
+    draft_bio_en: data.bioEn || "",
+    bio_ar: data.bioAr || "",
+    draft_bio_ar: data.bioAr || "",
+    alt_en: data.altEn || data.name || "",
+    draft_alt_en: data.altEn || data.name || "",
+    alt_ar: data.altAr || data.name || "",
+    draft_alt_ar: data.altAr || data.name || "",
+    sort_order: data.sortOrder ?? store.team_members.length,
+    draft_sort_order: data.sortOrder ?? store.team_members.length,
+    is_visible: data.isVisible ?? true,
+    draft_is_visible: data.isVisible ?? true,
+    is_published: false,
+  };
+  store.team_members.push(item);
+  saveStore(store);
+  return item;
+};
+
+export const deleteTeamMember = async (id) => {
+  const store = loadStore();
+  if (!Array.isArray(store.team_members)) store.team_members = [];
+  const before = store.team_members.length;
+  store.team_members = store.team_members.filter((t) => t.id !== id);
+  if (store.team_members.length === before) {
+    throw new AppError("Team member not found", 404);
+  }
+  saveStore(store);
+  return { deleted: true };
+};
+
+export const reorderTeamMembers = async (orderedIds) => {
+  const store = loadStore();
+  if (!Array.isArray(store.team_members)) store.team_members = [];
+  orderedIds.forEach((id, i) => {
+    const item = store.team_members.find((x) => x.id === id);
+    if (item) item.draft_sort_order = i;
+  });
+  saveStore(store);
+  return { reordered: true };
+};

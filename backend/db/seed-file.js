@@ -148,6 +148,41 @@ const run = async () => {
     return row;
   });
 
+  let teamOrder = 0;
+  const team_members = (siteConfig.team || []).map((member) => {
+    const copyEn = en.team?.members?.[member.id] || {};
+    const copyAr = ar.team?.members?.[member.id] || {};
+    const row = {
+      id: newId(),
+      slug: member.id,
+      media_url: member.src,
+      kind: member.kind || "image",
+      name: copyEn.name || member.id,
+      role_en: copyEn.role || "",
+      role_ar: copyAr.role || copyEn.role || "",
+      bio_en: copyEn.bio || "",
+      bio_ar: copyAr.bio || copyEn.bio || "",
+      alt_en: member.alt || copyEn.name || "",
+      alt_ar: member.alt || copyAr.name || copyEn.name || "",
+      sort_order: teamOrder,
+      is_visible: true,
+      draft_media_url: member.src,
+      draft_kind: member.kind || "image",
+      draft_name: copyEn.name || member.id,
+      draft_role_en: copyEn.role || "",
+      draft_role_ar: copyAr.role || copyEn.role || "",
+      draft_bio_en: copyEn.bio || "",
+      draft_bio_ar: copyAr.bio || copyEn.bio || "",
+      draft_alt_en: member.alt || copyEn.name || "",
+      draft_alt_ar: member.alt || copyAr.name || copyEn.name || "",
+      draft_sort_order: teamOrder,
+      draft_is_visible: true,
+      is_published: true,
+    };
+    teamOrder += 1;
+    return row;
+  });
+
   const opening_hours = DAYS.map((day) => ({
     day,
     is_closed: false,
@@ -194,6 +229,7 @@ const run = async () => {
     service_items,
     gallery_items,
     testimonials,
+    team_members,
     opening_hours,
     media_assets: [],
     publish_log: [],

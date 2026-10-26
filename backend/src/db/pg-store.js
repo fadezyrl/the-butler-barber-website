@@ -30,6 +30,7 @@ export const loadStoreFromPg = async () => {
       items,
       gallery,
       testimonials,
+      team,
       hours,
       media,
       log,
@@ -41,6 +42,7 @@ export const loadStoreFromPg = async () => {
       client.query("SELECT * FROM service_items ORDER BY sort_order"),
       client.query("SELECT * FROM gallery_items ORDER BY sort_order"),
       client.query("SELECT * FROM testimonials ORDER BY sort_order"),
+      client.query("SELECT * FROM team_members ORDER BY sort_order"),
       client.query("SELECT * FROM opening_hours"),
       client.query("SELECT * FROM media_assets ORDER BY created_at DESC"),
       client.query(
@@ -61,6 +63,7 @@ export const loadStoreFromPg = async () => {
       service_items: items.rows,
       gallery_items: gallery.rows,
       testimonials: testimonials.rows,
+      team_members: team.rows,
       opening_hours: hours.rows,
       media_assets: media.rows,
       publish_log: log.rows,
@@ -82,6 +85,7 @@ export const saveStoreToPg = async (store) => {
     await client.query("DELETE FROM service_categories");
     await client.query("DELETE FROM gallery_items");
     await client.query("DELETE FROM testimonials");
+    await client.query("DELETE FROM team_members");
     await client.query("DELETE FROM opening_hours");
     await client.query("DELETE FROM locale_copy");
     await client.query("DELETE FROM site_settings");
@@ -222,6 +226,48 @@ export const saveStoreToPg = async (store) => {
           t.draft_sort_order,
           t.draft_is_visible,
           t.is_published,
+        ],
+      );
+    }
+
+    for (const m of store.team_members || []) {
+      await client.query(
+        `INSERT INTO team_members (
+           id, slug, media_url, kind, name, role_en, role_ar, bio_en, bio_ar,
+           alt_en, alt_ar, sort_order, is_visible,
+           draft_media_url, draft_kind, draft_name, draft_role_en, draft_role_ar,
+           draft_bio_en, draft_bio_ar, draft_alt_en, draft_alt_ar,
+           draft_sort_order, draft_is_visible, is_published
+         ) VALUES (
+           $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,
+           $14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25
+         )`,
+        [
+          m.id,
+          m.slug,
+          m.media_url,
+          m.kind,
+          m.name,
+          m.role_en,
+          m.role_ar,
+          m.bio_en,
+          m.bio_ar,
+          m.alt_en,
+          m.alt_ar,
+          m.sort_order,
+          m.is_visible,
+          m.draft_media_url,
+          m.draft_kind,
+          m.draft_name,
+          m.draft_role_en,
+          m.draft_role_ar,
+          m.draft_bio_en,
+          m.draft_bio_ar,
+          m.draft_alt_en,
+          m.draft_alt_ar,
+          m.draft_sort_order,
+          m.draft_is_visible,
+          m.is_published,
         ],
       );
     }

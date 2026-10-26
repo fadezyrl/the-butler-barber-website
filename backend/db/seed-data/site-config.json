@@ -22,6 +22,26 @@
     "closes": "23:30",
     "display": "9:00 AM – 11:30 PM"
   },
+  "team": [
+    {
+      "id": "muhammadFaraz",
+      "src": "/assets/team/muhammad-faraz.jpg",
+      "alt": "Muhammad Faraz, Founder & CEO of The Butler Barber",
+      "kind": "image"
+    },
+    {
+      "id": "fahimAslam",
+      "src": "/assets/team/fahim-aslam.jpg",
+      "alt": "Fahim Aslam, Professional Barber & Stylist",
+      "kind": "image"
+    },
+    {
+      "id": "joelReynold",
+      "src": "/assets/team/joel-reynold.jpg",
+      "alt": "Joel Reynold, Barber & Stylist",
+      "kind": "image"
+    }
+  ],
   "images": {
     "hero": {
       "src": "/assets/videos/hero-butler.MP4",

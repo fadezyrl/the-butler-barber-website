@@ -33,6 +33,7 @@ export const en: Dictionary = {
   nav: {
     story: "Our Story",
     services: "Services",
+    team: "Our Team",
     work: "Our Work",
     contact: "Contact",
     book: "Book Appointment",
@@ -111,6 +112,29 @@ export const en: Dictionary = {
       "Fade and finish from the chair",
       "Chair work at The Butler Barber",
     ],
+  },
+  team: {
+    titleLead: "Our ",
+    titleEm: "Team.",
+    intro:
+      "Skilled hands, sharp eyes and a genuine passion for the craft. Meet the people behind every precise cut, clean fade and confident finish.",
+    members: {
+      muhammadFaraz: {
+        name: "Muhammad Faraz",
+        role: "Founder & CEO",
+        bio: "Built The Butler Barber on one promise: precision, consistency and a standard worth coming back to.",
+      },
+      fahimAslam: {
+        name: "Fahim Aslam",
+        role: "Professional Barber & Stylist",
+        bio: "Known for clean fades and sharp detail, with a real eye for a cut that suits you.",
+      },
+      joelReynold: {
+        name: "Joel Reynold",
+        role: "Barber & Stylist",
+        bio: "Precise, patient and detail-driven, from classic cuts to modern styles.",
+      },
+    },
   },
   reviews: {
     eyebrow: "Client Voices",

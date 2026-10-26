@@ -824,6 +824,109 @@ ul {
   background: var(--espresso);
 }
 
+/* ---------- team ---------- */
+.team {
+  background: var(--obsidian);
+  color: var(--white);
+  padding: clamp(5rem, 10vw, 9rem) var(--pad);
+  width: 100%;
+  max-width: 100%;
+}
+
+.team-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 3vw, 3rem);
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.team h2 {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  max-width: 12ch;
+}
+
+.team h2 span {
+  display: inline;
+  color: var(--ivory);
+}
+
+.team-intro {
+  max-width: 28rem;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--stone);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.team-card-wrap {
+  min-width: 0;
+}
+
+.team-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.team-photo {
+  position: relative;
+  margin-bottom: 1.15rem;
+  border: 1px solid rgba(212, 174, 120, 0.55);
+  padding: 0.35rem;
+}
+
+.team-photo .ph {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+}
+
+.team-name {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--ivory);
+}
+
+.team-role {
+  margin-top: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.team-bio {
+  margin-top: 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--stone);
+  max-width: 22rem;
+}
+
+.team-grid > .team-card-wrap:nth-child(2).reveal {
+  transition-delay: 80ms;
+}
+
+.team-grid > .team-card-wrap:nth-child(3).reveal {
+  transition-delay: 160ms;
+}
+
 /* ---------- gallery ---------- */
 .gallery {
   background: var(--obsidian);
@@ -2013,6 +2116,15 @@ body.menu-open .wa-float {
     transform: none;
   }
 
+  .team-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .team h2 {
+    max-width: none;
+  }
+
   .gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
@@ -2115,6 +2227,16 @@ body.menu-open .wa-float {
 @media (max-width: 640px) {
   :root {
     --pad: clamp(1.1rem, 5vw, 1.5rem);
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+    max-width: 26rem;
+    margin-inline: auto;
+  }
+
+  .team-bio {
+    max-width: none;
   }
 
   .wordmark {
@@ -2420,6 +2542,8 @@ html[lang="ar"] .wordmark {
 html[lang="ar"] .hero h1,
 html[lang="ar"] .story h2,
 html[lang="ar"] .services h2,
+html[lang="ar"] .team h2,
+html[lang="ar"] .team-name,
 html[lang="ar"] .gallery h2,
 html[lang="ar"] .contact h2,
 html[lang="ar"] .cta h2,

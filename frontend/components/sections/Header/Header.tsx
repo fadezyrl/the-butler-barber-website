@@ -93,6 +93,9 @@ export const Header = (): React.JSX.Element => {
         <a href="#services" onClick={closeMenu}>
           {dictionary.nav.services}
         </a>
+        <a href="#team" onClick={closeMenu}>
+          {dictionary.nav.team}
+        </a>
         <a href="#work" onClick={closeMenu}>
           {dictionary.nav.work}
         </a>
